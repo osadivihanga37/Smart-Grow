@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "Smart Grow",
+    "slug": "smart-grow",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "android": {
+      "softwareKeyboardLayoutMode": "pan"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "newArchEnabled": true
+  }
+}

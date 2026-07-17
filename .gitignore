@@ -1,0 +1,25 @@
+# --- Backend (Django/Python) ---
+Backend/venv/
+Backend/__pycache__/
+Backend/**/__pycache__/
+Backend/*.pyc
+Backend/db.sqlite3
+Backend/datadump.json
+Backend/.env
+Backend/staticfiles/
+
+# --- Frontend (React Native/Expo) ---
+frontend/node_modules/
+frontend/.expo/
+frontend/dist/
+frontend/web-build/
+frontend/*.log
+
+# --- Root-level venv (leftover, safe to ignore) ---
+venv/
+
+# --- Editor/OS junk ---
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
