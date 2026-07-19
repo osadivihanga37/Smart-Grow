@@ -1,7 +1,12 @@
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Platform } from 'react-native'
 
-const BASE_URL = 'http://127.0.0.1:8000/api'
+// Android emulator can't reach the host machine via 127.0.0.1 — it needs
+// the special 10.0.2.2 alias instead. Web and iOS simulator use 127.0.0.1 as normal.
+const BASE_URL = Platform.OS === 'android'
+  ? 'http://10.0.2.2:8000/api'
+  : 'http://127.0.0.1:8000/api'
 
 const api = axios.create({
   baseURL: BASE_URL,
