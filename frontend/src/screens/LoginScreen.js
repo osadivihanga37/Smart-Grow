@@ -5,39 +5,47 @@ import {
   Platform, ScrollView, ActivityIndicator, Image
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Ionicons } from '@expo/vector-icons'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import { t } from '../../translations'
 import { loginUser } from '../services/api'
+import { showValidationErrorNotification } from '../services/notifications'
 import { COLORS, RADIUS, SPACING, SHADOW, TYPOGRAPHY } from '../theme'
 
 export default function LoginScreen({ navigation }) {
   const { lang } = useLanguage()
   const { login } = useAuth()
 
-  const [username, setUsername] = useState('')
+  const [identifier, setIdentifier] = useState('') // username OR email
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [focusedField, setFocusedField] = useState(null)
 
+  const isFormValid = identifier.trim().length > 0 && password.length > 0
+
   const handleLogin = async () => {
-    if (!username || !password) {
+    if (!identifier || !password) {
       Alert.alert('Error', t('error', lang))
       return
     }
 
     setLoading(true)
     try {
-      const response = await loginUser(username, password, lang)
+      const response = await loginUser(identifier, password, lang)
       await login(response.data.token, response.data.user)
     } catch (error) {
-      Alert.alert(
-        'Error',
-        error.response?.data?.error || t('error', lang)
-      )
+      const message = error.response?.data?.error || t('error', lang)
+      Alert.alert('Error', message)
+      showValidationErrorNotification('Login Failed', message)
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleGoogleLogin = () => {
+    Alert.alert(t('continueWithGoogle', lang), t('googleComingSoon', lang))
   }
 
   return (
@@ -48,7 +56,6 @@ export default function LoginScreen({ navigation }) {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
 
-          {/* Header */}
           <View style={styles.header}>
             <View style={styles.decorCircleLarge} />
             <View style={styles.decorCircleSmall} />
@@ -63,46 +70,59 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.subtitle}>{t('login', lang)}</Text>
           </View>
 
-          {/* Form Card */}
           <View style={styles.form}>
 
-            {/* Username */}
-            <Text style={styles.label}>{t('username', lang)}</Text>
+            <Text style={styles.label}>{t('username', lang)} / {t('email', lang)}</Text>
             <TextInput
               style={[
                 styles.input,
-                focusedField === 'username' && styles.inputFocused,
+                focusedField === 'identifier' && styles.inputFocused,
               ]}
-              placeholder={t('username', lang)}
+              placeholder={`${t('username', lang)} / ${t('email', lang)}`}
               placeholderTextColor={COLORS.textMuted}
-              value={username}
-              onChangeText={setUsername}
+              value={identifier}
+              onChangeText={setIdentifier}
               autoCapitalize="none"
-              onFocus={() => setFocusedField('username')}
+              onFocus={() => setFocusedField('identifier')}
               onBlur={() => setFocusedField(null)}
             />
 
-            {/* Password */}
             <Text style={styles.label}>{t('password', lang)}</Text>
-            <TextInput
+            <View
               style={[
-                styles.input,
+                styles.passwordRow,
                 focusedField === 'password' && styles.inputFocused,
               ]}
-              placeholder={t('password', lang)}
-              placeholderTextColor={COLORS.textMuted}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              onFocus={() => setFocusedField('password')}
-              onBlur={() => setFocusedField(null)}
-            />
+            >
+              <TextInput
+                style={styles.passwordInput}
+                placeholder={t('password', lang)}
+                placeholderTextColor={COLORS.textMuted}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField(null)}
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword((prev) => !prev)}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              >
+                <Ionicons
+                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                  size={20}
+                  color={COLORS.textMuted}
+                />
+              </TouchableOpacity>
+            </View>
 
-            {/* Login Button */}
             <TouchableOpacity
-              style={styles.loginButton}
+              style={[
+                styles.loginButton,
+                (!isFormValid || loading) && styles.loginButtonDisabled,
+              ]}
               onPress={handleLogin}
-              disabled={loading}
+              disabled={loading || !isFormValid}
               activeOpacity={0.8}
             >
               {loading ? (
@@ -114,7 +134,21 @@ export default function LoginScreen({ navigation }) {
               )}
             </TouchableOpacity>
 
-            {/* Register Link */}
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <TouchableOpacity
+              style={styles.googleButton}
+              onPress={handleGoogleLogin}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="logo-google" size={20} color="#EA4335" />
+              <Text style={styles.googleButtonText}>{t('continueWithGoogle', lang)}</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.registerLink}
               onPress={() => navigation.navigate('Register')}
@@ -124,7 +158,6 @@ export default function LoginScreen({ navigation }) {
               </Text>
             </TouchableOpacity>
 
-            {/* Back to Language */}
             <TouchableOpacity
               style={styles.backLink}
               onPress={() => navigation.navigate('LanguageSelect')}
@@ -134,7 +167,6 @@ export default function LoginScreen({ navigation }) {
               </Text>
             </TouchableOpacity>
 
-            {/* Footer */}
             <View style={styles.footer}>
               <Text style={styles.footerText}>🧅 Smart Grow for Big Onion Farmers</Text>
               <Text style={styles.footerVersion}>v1.0</Text>
@@ -235,6 +267,21 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     backgroundColor: '#fff',
   },
+  passwordRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.md,
+    paddingHorizontal: SPACING.md,
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingVertical: SPACING.md,
+    fontSize: 16,
+    color: COLORS.textDark,
+  },
   loginButton: {
     backgroundColor: COLORS.primary,
     borderRadius: RADIUS.md,
@@ -243,10 +290,48 @@ const styles = StyleSheet.create({
     marginTop: SPACING.lg,
     ...SHADOW.soft,
   },
+  loginButtonDisabled: {
+    backgroundColor: COLORS.border,
+    ...SHADOW.soft,
+    shadowOpacity: 0,
+    elevation: 0,
+  },
   loginButtonText: {
     color: '#fff',
     fontSize: 17,
     fontWeight: '700',
+  },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: SPACING.lg,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: COLORS.border,
+  },
+  dividerText: {
+    marginHorizontal: SPACING.sm,
+    color: COLORS.textMuted,
+    fontSize: 12,
+  },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
+    marginTop: SPACING.md,
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
+    gap: SPACING.sm,
+  },
+  googleButtonText: {
+    color: COLORS.textDark,
+    fontSize: 15,
+    fontWeight: '600',
   },
   registerLink: {
     alignItems: 'center',

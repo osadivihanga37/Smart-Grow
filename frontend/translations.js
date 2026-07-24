@@ -79,6 +79,70 @@ export const translations = {
     tapToCheckDisease: "Tap the button above to check today's disease risk for your Big Onion crop",
     locationDambulla: 'Dambulla, Sri Lanka',
     result: 'Result',
+
+    // ─── WELCOME / ABOUT ───────────────────────────────────────────────────
+    welcomeTo: 'Welcome to',
+    aboutSmartGrow: 'About Smart Grow',
+    aboutDescription: 'Smart Grow helps Big Onion farmers make better irrigation and disease-prevention decisions using real-time weather data and research-backed recommendations — available in English, Sinhala, and Tamil.',
+    getStarted: 'Get Started',
+
+    // ─── LOGIN / REGISTER EXTRAS ───────────────────────────────────────────
+    continueWithGoogle: 'Continue with Google',
+    googleComingSoon: 'Google Sign-In coming soon.',
+    confirmPassword: 'Confirm Password',
+    passwordsDontMatch: "Passwords don't match.",
+    invalidGmail: 'Please enter a valid @gmail.com email address.',
+    passwordTooShort: 'Password must be at least 6 characters.',
+    invalidAge: 'Please enter a valid age.',
+    selectDistrict: 'Please select your district.',
+    age: 'Age',
+    detectLocation: 'Detect my current location (required)',
+    detectLocationOptional: 'Detect my current location (optional)',
+    detectingLocation: 'Detecting...',
+    registerHelperText: 'Fill in username, a valid @gmail.com email, matching passwords, your district, and a location within the service area to continue.',
+
+    // ─── SERVICE AREA ──────────────────────────────────────────────────────
+    outsideServiceArea: 'Outside Service Area',
+    outsideServiceAreaDesc: "Smart Grow currently only supports farmers in the Dambulla region. Your current location is outside our service area, so the app isn't available to you yet.",
+    checkAgain: 'Check Again',
+
+    // ─── LOCATION SCREENS ──────────────────────────────────────────────────
+    allowYourLocation: 'Allow your location',
+    locationPermissionDesc: "We'll use your location to give accurate weather-based irrigation and disease risk recommendations for your farm.",
+    allowLocationButton: 'Allow Location',
+    locationTrackingTitle: 'Location Tracking',
+    detectingYourLocation: 'Detecting your location...',
+    locationPermissionRequired: 'Location permission is required to track your farm location.',
+    grantPermission: 'Grant Permission',
+    currentLocation: 'Current Location',
+    openInGoogleMaps: 'Open in Google Maps',
+    refreshLocation: 'Refresh Location',
+    couldNotDetectLocation: 'Could not detect your location. Please try again.',
+    latitude: 'Latitude',
+    longitude: 'Longitude',
+
+    // ─── NOTIFICATION PERMISSION ───────────────────────────────────────────
+    stayUpdated: 'Stay Updated',
+    notificationPermissionDesc: 'Allow notifications so Smart Grow can remind you when your next irrigation day arrives, and alert you right away if something needs your attention.',
+    allow: 'Allow',
+    allowWhileUsing: 'Allow While Using App',
+    dontAllow: "Don't Allow",
+
+    // ─── SETTINGS ──────────────────────────────────────────────────────────
+    settingsAccount: 'Account',
+    updateProfile: 'Update Profile',
+    permissions: 'Permissions',
+    notifications: 'Notifications',
+    locationTrackingSetting: 'Location Tracking',
+    farmData: 'Farm Data',
+    addFarmPlot: 'Add Farm Plot',
+    dangerZone: 'Danger Zone',
+    deleteAccount: 'Delete Account',
+    deleteAccountConfirm: 'This will permanently delete your account and all data. This cannot be undone.',
+    profileUpdated: 'Profile updated.',
+    nameCannotBeEmpty: 'Name cannot be empty.',
+    couldNotUpdateProfile: 'Could not update profile. Please try again.',
+    couldNotDeleteAccount: 'Could not delete account. Please try again.',
   },
 
   si: {
@@ -161,6 +225,70 @@ export const translations = {
     tapToCheckDisease: 'ඔබේ රතු ලූනු බෝගයේ අද දින රෝග අවදානම පරීක්ෂා කිරීමට ඉහත බොත්තම ඔබන්න',
     locationDambulla: 'දඹුල්ල, ශ්‍රී ලංකාව',
     result: 'ප්‍රතිඵලය',
+
+    // ─── WELCOME / ABOUT ───────────────────────────────────────────────────
+    welcomeTo: 'වෙත',
+    aboutSmartGrow: 'ස්මාර්ට් ග්‍රෝ පිළිබඳ',
+    aboutDescription: 'තථ්‍ය කාලීන කාලගුණ දත්ත සහ පර්යේෂණ පදනම් වූ නිර්දේශ භාවිතා කරමින්, ලොකු ලූනු ගොවීන්ට වඩා හොඳ වාරිමාර්ග හා රෝග වැළැක්වීමේ තීරණ ගැනීමට ස්මාර්ට් ග්‍රෝ උපකාරී වේ — සිංහල, ඉංග්‍රීසි සහ දෙමළ භාෂාවලින්.',
+    getStarted: 'ආරම්භ කරන්න',
+
+    // ─── LOGIN / REGISTER EXTRAS ───────────────────────────────────────────
+    continueWithGoogle: 'Google සමඟ ඉදිරියට යන්න',
+    googleComingSoon: 'Google පිවිසුම ඉක්මනින්.',
+    confirmPassword: 'මුරපදය තහවුරු කරන්න',
+    passwordsDontMatch: 'මුරපද නොගැලපේ.',
+    invalidGmail: 'කරුණාකර වලංගු @gmail.com විද්‍යුත් තැපැල් ලිපිනයක් ඇතුළත් කරන්න.',
+    passwordTooShort: 'මුරපදය අවම වශයෙන් අක්ෂර 6ක් විය යුතුය.',
+    invalidAge: 'කරුණාකර වලංගු වයසක් ඇතුළත් කරන්න.',
+    selectDistrict: 'කරුණාකර ඔබේ දිස්ත්‍රික්කය තෝරන්න.',
+    age: 'වයස',
+    detectLocation: 'මගේ වත්මන් ස්ථානය හඳුනාගන්න (අවශ්‍යයි)',
+    detectLocationOptional: 'මගේ වත්මන් ස්ථානය හඳුනාගන්න (විකල්පයි)',
+    detectingLocation: 'හඳුනාගනිමින්...',
+    registerHelperText: 'ඉදිරියට යාමට පරිශීලක නාමය, වලංගු @gmail.com විද්‍යුත් තැපෑල, ගැලපෙන මුරපද, ඔබේ දිස්ත්‍රික්කය, සහ සේවා ප්‍රදේශය තුළ ස්ථානයක් ඇතුළත් කරන්න.',
+
+    // ─── SERVICE AREA ──────────────────────────────────────────────────────
+    outsideServiceArea: 'සේවා ප්‍රදේශයෙන් පිටත',
+    outsideServiceAreaDesc: 'ස්මාර්ට් ග්‍රෝ දැනට දඹුල්ල ප්‍රදේශයේ ගොවීන්ට පමණක් සේවා සපයයි. ඔබේ වත්මන් ස්ථානය අපගේ සේවා ප්‍රදේශයෙන් පිටත බැවින්, යෙදුම තවම ඔබට ලබා ගත නොහැක.',
+    checkAgain: 'නැවත පරීක්ෂා කරන්න',
+
+    // ─── LOCATION SCREENS ──────────────────────────────────────────────────
+    allowYourLocation: 'ඔබේ ස්ථානය අවසර දෙන්න',
+    locationPermissionDesc: 'ඔබේ ගොවිපළ සඳහා නිවැරදි කාලගුණ පදනම් වූ වාරිමාර්ග හා රෝග අවදානම් නිර්දේශ ලබා දීමට අපි ඔබේ ස්ථානය භාවිතා කරමු.',
+    allowLocationButton: 'ස්ථානයට අවසර දෙන්න',
+    locationTrackingTitle: 'ස්ථාන නිරීක්ෂණය',
+    detectingYourLocation: 'ඔබේ ස්ථානය හඳුනාගනිමින්...',
+    locationPermissionRequired: 'ඔබේ ගොවිපළ ස්ථානය නිරීක්ෂණය කිරීමට ස්ථාන අවසරය අවශ්‍යයි.',
+    grantPermission: 'අවසරය ලබා දෙන්න',
+    currentLocation: 'වත්මන් ස්ථානය',
+    openInGoogleMaps: 'Google සිතියම්වල විවෘත කරන්න',
+    refreshLocation: 'ස්ථානය නැවුම් කරන්න',
+    couldNotDetectLocation: 'ඔබේ ස්ථානය හඳුනාගත නොහැකි විය. නැවත උත්සාහ කරන්න.',
+    latitude: 'අක්ෂාංශය',
+    longitude: 'දේශාංශය',
+
+    // ─── NOTIFICATION PERMISSION ───────────────────────────────────────────
+    stayUpdated: 'යාවත්කාලීනව සිටින්න',
+    notificationPermissionDesc: 'ඔබේ මීළඟ වාරි දිනය පැමිණි විට ස්මාර්ට් ග්‍රෝට ඔබට මතක් කර දීමට සහ අවශ්‍ය අවස්ථාවලදී ඔබට වහාම දැනුම් දීමට දැනුම්දීම් වලට අවසර දෙන්න.',
+    allow: 'අවසර දෙන්න',
+    allowWhileUsing: 'භාවිතා කරන අතරතුර අවසර දෙන්න',
+    dontAllow: 'අවසර නොදෙන්න',
+
+    // ─── SETTINGS ──────────────────────────────────────────────────────────
+    settingsAccount: 'ගිණුම',
+    updateProfile: 'පැතිකඩ යාවත්කාලීන කරන්න',
+    permissions: 'අවසර',
+    notifications: 'දැනුම්දීම්',
+    locationTrackingSetting: 'ස්ථාන නිරීක්ෂණය',
+    farmData: 'ගොවිපළ දත්ත',
+    addFarmPlot: 'ගොවිපළ කොටසක් එක් කරන්න',
+    dangerZone: 'අවදානම් කලාපය',
+    deleteAccount: 'ගිණුම මකන්න',
+    deleteAccountConfirm: 'මෙය ඔබේ ගිණුම සහ සියලුම දත්ත ස්ථිරවම මකා දමනු ඇත. මෙය ආපසු හැරවිය නොහැක.',
+    profileUpdated: 'පැතිකඩ යාවත්කාලීන කරන ලදී.',
+    nameCannotBeEmpty: 'නම හිස් විය නොහැක.',
+    couldNotUpdateProfile: 'පැතිකඩ යාවත්කාලීන කළ නොහැකි විය. නැවත උත්සාහ කරන්න.',
+    couldNotDeleteAccount: 'ගිණුම මකා දැමිය නොහැකි විය. නැවත උත්සාහ කරන්න.',
   },
 
   ta: {
@@ -243,6 +371,70 @@ export const translations = {
     tapToCheckDisease: 'உங்கள் சிவப்பு வெங்காய பயிரின் இன்றைய நோய் ஆபத்தை சரிபார்க்க மேலே உள்ள பொத்தானை தட்டவும்',
     locationDambulla: 'தம்புள்ளை, இலங்கை',
     result: 'முடிவு',
+
+    // ─── WELCOME / ABOUT ───────────────────────────────────────────────────
+    welcomeTo: 'இற்கு',
+    aboutSmartGrow: 'ஸ்மார்ட் க்ரோ பற்றி',
+    aboutDescription: 'நிகழ்நேர வானிலை தரவு மற்றும் ஆராய்ச்சி அடிப்படையிலான பரிந்துரைகளைப் பயன்படுத்தி, பெரிய வெங்காய விவசாயிகள் சிறந்த நீர்ப்பாசன மற்றும் நோய் தடுப்பு முடிவுகளை எடுக்க ஸ்மார்ட் க்ரோ உதவுகிறது — தமிழ், ஆங்கிலம் மற்றும் சிங்களத்தில்.',
+    getStarted: 'தொடங்குங்கள்',
+
+    // ─── LOGIN / REGISTER EXTRAS ───────────────────────────────────────────
+    continueWithGoogle: 'Google மூலம் தொடரவும்',
+    googleComingSoon: 'Google உள்நுழைவு விரைவில்.',
+    confirmPassword: 'கடவுச்சொல்லை உறுதிப்படுத்தவும்',
+    passwordsDontMatch: 'கடவுச்சொற்கள் பொருந்தவில்லை.',
+    invalidGmail: 'சரியான @gmail.com மின்னஞ்சல் முகவரியை உள்ளிடவும்.',
+    passwordTooShort: 'கடவுச்சொல் குறைந்தது 6 எழுத்துகள் இருக்க வேண்டும்.',
+    invalidAge: 'சரியான வயதை உள்ளிடவும்.',
+    selectDistrict: 'உங்கள் மாவட்டத்தை தேர்ந்தெடுக்கவும்.',
+    age: 'வயது',
+    detectLocation: 'எனது தற்போதைய இருப்பிடத்தை கண்டறியவும் (தேவை)',
+    detectLocationOptional: 'எனது தற்போதைய இருப்பிடத்தை கண்டறியவும் (விருப்பத்தேர்வு)',
+    detectingLocation: 'கண்டறிகிறது...',
+    registerHelperText: 'தொடர பயனர்பெயர், சரியான @gmail.com மின்னஞ்சல், பொருந்தும் கடவுச்சொற்கள், உங்கள் மாவட்டம், மற்றும் சேவை பகுதிக்குள் ஒரு இருப்பிடத்தை உள்ளிடவும்.',
+
+    // ─── SERVICE AREA ──────────────────────────────────────────────────────
+    outsideServiceArea: 'சேவை பகுதிக்கு வெளியே',
+    outsideServiceAreaDesc: 'ஸ்மார்ட் க்ரோ தற்போது தம்புள்ளை பகுதியில் உள்ள விவசாயிகளுக்கு மட்டுமே சேவை செய்கிறது. உங்கள் தற்போதைய இருப்பிடம் எங்கள் சேவை பகுதிக்கு வெளியே உள்ளதால், பயன்பாடு இன்னும் உங்களுக்கு கிடைக்கவில்லை.',
+    checkAgain: 'மீண்டும் சரிபார்க்கவும்',
+
+    // ─── LOCATION SCREENS ──────────────────────────────────────────────────
+    allowYourLocation: 'உங்கள் இருப்பிடத்தை அனுமதிக்கவும்',
+    locationPermissionDesc: 'உங்கள் பண்ணைக்கு துல்லியமான வானிலை அடிப்படையிலான நீர்ப்பாசனம் மற்றும் நோய் ஆபத்து பரிந்துரைகளை வழங்க நாங்கள் உங்கள் இருப்பிடத்தைப் பயன்படுத்துவோம்.',
+    allowLocationButton: 'இருப்பிடத்தை அனுமதிக்கவும்',
+    locationTrackingTitle: 'இருப்பிட கண்காணிப்பு',
+    detectingYourLocation: 'உங்கள் இருப்பிடத்தை கண்டறிகிறது...',
+    locationPermissionRequired: 'உங்கள் பண்ணை இருப்பிடத்தை கண்காணிக்க இருப்பிட அனுமதி தேவை.',
+    grantPermission: 'அனுமதி வழங்கவும்',
+    currentLocation: 'தற்போதைய இருப்பிடம்',
+    openInGoogleMaps: 'Google வரைபடங்களில் திறக்கவும்',
+    refreshLocation: 'இருப்பிடத்தை புதுப்பிக்கவும்',
+    couldNotDetectLocation: 'உங்கள் இருப்பிடத்தை கண்டறிய முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
+    latitude: 'அட்சரேகை',
+    longitude: 'தீர்க்கரேகை',
+
+    // ─── NOTIFICATION PERMISSION ───────────────────────────────────────────
+    stayUpdated: 'புதுப்பித்த நிலையில் இருங்கள்',
+    notificationPermissionDesc: 'உங்கள் அடுத்த நீர்ப்பாசன நாள் வரும்போது ஸ்மார்ட் க்ரோ உங்களுக்கு நினைவூட்டவும், கவனம் தேவைப்படும்போது உடனடியாக எச்சரிக்கவும் அறிவிப்புகளை அனுமதிக்கவும்.',
+    allow: 'அனுமதிக்கவும்',
+    allowWhileUsing: 'பயன்படுத்தும்போது அனுமதிக்கவும்',
+    dontAllow: 'அனுமதிக்க வேண்டாம்',
+
+    // ─── SETTINGS ──────────────────────────────────────────────────────────
+    settingsAccount: 'கணக்கு',
+    updateProfile: 'சுயவிவரத்தை புதுப்பிக்கவும்',
+    permissions: 'அனுமதிகள்',
+    notifications: 'அறிவிப்புகள்',
+    locationTrackingSetting: 'இருப்பிட கண்காணிப்பு',
+    farmData: 'பண்ணை தரவு',
+    addFarmPlot: 'பண்ணை மனையை சேர்க்கவும்',
+    dangerZone: 'ஆபத்து மண்டலம்',
+    deleteAccount: 'கணக்கை நீக்கவும்',
+    deleteAccountConfirm: 'இது உங்கள் கணக்கு மற்றும் அனைத்து தரவையும் நிரந்தரமாக நீக்கும். இதை மாற்ற முடியாது.',
+    profileUpdated: 'சுயவிவரம் புதுப்பிக்கப்பட்டது.',
+    nameCannotBeEmpty: 'பெயர் காலியாக இருக்க முடியாது.',
+    couldNotUpdateProfile: 'சுயவிவரத்தை புதுப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
+    couldNotDeleteAccount: 'கணக்கை நீக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
   },
 }
 

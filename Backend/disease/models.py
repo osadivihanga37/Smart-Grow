@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 
 class DiseaseProfile(models.Model):
@@ -8,17 +7,17 @@ class DiseaseProfile(models.Model):
     """
     name = models.CharField(max_length=100)
     pathogen = models.CharField(max_length=100)
-    
+
     # Environmental thresholds that trigger this disease
     min_temperature_c = models.FloatField(help_text="Minimum temperature for disease development")
     max_temperature_c = models.FloatField(help_text="Maximum temperature for disease development")
     min_humidity_percent = models.FloatField(help_text="Minimum humidity % that favors disease")
-    
+
     # Risk info
     max_yield_loss_percent = models.FloatField(help_text="Maximum yield loss if untreated")
     symptoms = models.TextField(help_text="Visible symptoms to look for")
     prevention = models.TextField(help_text="Recommended prevention/action")
-    
+
     # Source citation
     research_source = models.CharField(max_length=255, blank=True)
 
@@ -37,7 +36,9 @@ class DiseaseAlert(models.Model):
         ('CRITICAL', 'Critical - Take Action Now'),
     ]
 
-    farmer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='disease_alerts')
+    # Firebase Auth UID — no longer a ForeignKey to Django's User.
+    farmer_uid = models.CharField(max_length=128, db_index=True)
+
     disease = models.ForeignKey(DiseaseProfile, on_delete=models.CASCADE)
 
     # Weather at time of alert
@@ -55,4 +56,4 @@ class DiseaseAlert(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.farmer.username} - {self.disease.name} - {self.risk_level}"
+        return f"{self.farmer_uid} - {self.disease.name} - {self.risk_level}"

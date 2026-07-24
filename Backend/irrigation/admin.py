@@ -13,15 +13,15 @@ class CropWaterProfileAdmin(admin.ModelAdmin):
 @admin.register(IrrigationRecommendation)
 class IrrigationRecommendationAdmin(admin.ModelAdmin):
     list_display = (
-        'farmer', 'crop', 'irrigation_status', 'moisture_deficit_mm',
+        'farmer_uid', 'crop', 'irrigation_status', 'moisture_deficit_mm',
         'recommended_volume_liters', 'created_at'
     )
     list_filter = ('should_irrigate', 'created_at', 'crop')
-    search_fields = ('farmer__username', 'farmer__email')
+    search_fields = ('farmer_uid',)
     ordering = ('-created_at',)
     date_hierarchy = 'created_at'
     list_per_page = 25
-    autocomplete_fields = ('farmer', 'crop')
+    autocomplete_fields = ('crop',)
     readonly_fields = (
         'temperature_c', 'humidity_percent', 'rainfall_mm',
         'moisture_deficit_mm', 'should_irrigate',

@@ -1,12 +1,4 @@
-from django.contrib import admin
-from .models import FarmerProfile
-
-
-@admin.register(FarmerProfile)
-class FarmerProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'district', 'phone_number', 'farm_size_acres', 'created_at')
-    search_fields = ('user__username', 'user__email', 'district', 'phone_number')
-    list_filter = ('district',)
-    ordering = ('-created_at',)
-    list_per_page = 25
-    autocomplete_fields = ('user',)
+# Farmer profile data now lives in Firestore (collection: "farmer_profiles"),
+# not a Django model, so there's nothing to register with Django admin here
+# anymore. Manage farmer profiles via the Firebase Console instead
+# (Firestore Database -> farmer_profiles collection).

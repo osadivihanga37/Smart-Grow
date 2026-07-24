@@ -11,8 +11,14 @@ import { t } from '../../translations'
 import { getDiseaseForecast } from '../services/api'
 import { COLORS, RADIUS, SPACING, SHADOW, TYPOGRAPHY } from '../theme'
 
+const LANG_TABS = [
+  { code: 'en', label: 'English' },
+  { code: 'si', label: 'සිංහල' },
+  { code: 'ta', label: 'தமிழ்' },
+]
+
 export default function HomeScreen({ navigation }) {
-  const { lang } = useLanguage()
+  const { lang, changeLanguage } = useLanguage()
   const { user } = useAuth()
   const [weather, setWeather] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -58,13 +64,17 @@ export default function HomeScreen({ navigation }) {
           />
           <View style={styles.heroOverlay} />
           <View style={styles.heroContent}>
-            <Image
-              source={require('../../assets/logo.png')}
-              style={styles.heroLogo}
-              resizeMode="contain"
-            />
-            <Text style={styles.heroWelcome}>{t('welcome', lang)},</Text>
-            <Text style={styles.heroUsername}>{user?.username || 'Farmer'} </Text>
+            <View style={styles.heroBadgeRow}>
+              <Image
+                source={require('../../assets/logo.png')}
+                style={styles.heroLogo}
+                resizeMode="contain"
+              />
+              <View style={styles.heroGreeting}>
+                <Text style={styles.heroWelcomeLabel}>{t('welcome!', lang).toUpperCase()}</Text>
+                <Text style={styles.heroUsername}>{user?.username || 'Farmer'}</Text>
+              </View>
+            </View>
           </View>
         </View>
 
@@ -101,6 +111,22 @@ export default function HomeScreen({ navigation }) {
           ) : (
             <Text style={styles.errorText}>{t('error', lang)}</Text>
           )}
+        </View>
+
+        {/* Language tab bar — same style as the About screen's tab bar, no flags */}
+        <View style={styles.langTabBar}>
+          {LANG_TABS.map((item) => (
+            <TouchableOpacity
+              key={item.code}
+              style={[styles.langTab, lang === item.code && styles.langTabActive]}
+              onPress={() => changeLanguage(item.code)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.langTabText, lang === item.code && styles.langTabTextActive]}>
+                {item.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
         {/* Quick Actions */}
@@ -179,27 +205,43 @@ const styles = StyleSheet.create({
   },
   heroOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(27, 94, 32, 0.55)',
+    backgroundColor: 'rgba(15, 61, 18, 0.62)',
   },
   heroContent: {
     position: 'absolute',
     bottom: SPACING.lg,
     left: SPACING.md,
+    right: SPACING.md,
+  },
+  heroBadgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   heroLogo: {
-    width: 44,
-    height: 44,
+    width: 52,
+    height: 52,
     marginRight: SPACING.sm,
+    backgroundColor: '#fff',
+    borderRadius: 26,
+    padding: 4,
   },
-  heroWelcome: {
-    ...TYPOGRAPHY.caption,
-    color: '#E8F5E9',
+  heroGreeting: {
+    justifyContent: 'center',
+  },
+    heroWelcomeLabel: {
+    fontSize: 18,
+    fontWeight: '700',
+    letterSpacing: 1.2,
+    color: 'rgba(255,255,255,0.9)',
+    marginBottom: 4,
   },
   heroUsername: {
-    ...TYPOGRAPHY.h2,
+    fontSize: 34,
+    fontWeight: '800',
     color: '#fff',
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
   weatherCard: {
     backgroundColor: COLORS.surface,
@@ -251,6 +293,32 @@ const styles = StyleSheet.create({
     color: COLORS.textMuted,
     textAlign: 'center',
     padding: SPACING.md,
+  },
+  langTabBar: {
+    flexDirection: 'row',
+    marginHorizontal: SPACING.md,
+    marginTop: SPACING.md,
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.md,
+    padding: 4,
+    ...SHADOW.soft,
+  },
+  langTab: {
+    flex: 1,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.sm,
+    alignItems: 'center',
+  },
+  langTabActive: {
+    backgroundColor: COLORS.primary,
+  },
+  langTabText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: COLORS.textMuted,
+  },
+  langTabTextActive: {
+    color: '#fff',
   },
   sectionTitle: {
     ...TYPOGRAPHY.h3,

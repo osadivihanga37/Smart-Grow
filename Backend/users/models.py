@@ -1,20 +1,6 @@
-from django.db import models
-from django.contrib.auth.models import User
-
-class FarmerProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='farmer_profile')
-    phone_number = models.CharField(max_length=15, blank=True)
-    
-    # Location info — used for OpenWeatherMap API calls
-    district = models.CharField(max_length=100, default='Dambulla')
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
-    
-    # Farm details
-    farm_size_acres = models.FloatField(null=True, blank=True)
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.user.username} ({self.district})"
+# Farmer profile data now lives in Firestore (collection: "farmer_profiles",
+# document ID = Firebase Auth uid) instead of a Django model — see
+# smartgrow/firebase_config.py and users/views.py.
+#
+# This file is intentionally left without models. The `users` app stays
+# registered in INSTALLED_APPS so its views/urls/authentication continue to work.

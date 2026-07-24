@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   View, Text, StyleSheet, ScrollView,
-  TouchableOpacity, Alert, Platform, Image
+  TouchableOpacity, Alert, Platform
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
@@ -10,8 +10,8 @@ import { useAuth } from '../context/AuthContext'
 import { t } from '../../translations'
 import { COLORS, RADIUS, SPACING, SHADOW, TYPOGRAPHY } from '../theme'
 
-export default function ProfileScreen() {
-  const { lang, changeLanguage } = useLanguage()
+export default function ProfileScreen({ navigation }) {
+  const { lang } = useLanguage()
   const { user, logout } = useAuth()
 
   const handleLogout = () => {
@@ -31,9 +31,6 @@ export default function ProfileScreen() {
       )
     }
   }
-  const handleLanguageChange = (newLang) => {
-    changeLanguage(newLang)
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,6 +40,15 @@ export default function ProfileScreen() {
         <View style={styles.header}>
           <View style={styles.decorCircleLarge} />
           <View style={styles.decorCircleSmall} />
+
+          <TouchableOpacity
+            style={styles.settingsButton}
+            onPress={() => navigation.navigate('Settings')}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons name="settings-outline" size={24} color="#fff" />
+          </TouchableOpacity>
+
           <View style={styles.avatarWrap}>
             <Text style={styles.avatar}>👨‍🌾</Text>
           </View>
@@ -77,47 +83,6 @@ export default function ProfileScreen() {
             </View>
             <Text style={styles.infoValue}>{t('locationDambulla', lang)}</Text>
           </View>
-        </View>
-
-        {/* Language Selection */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>{t('chooseLanguage', lang)}</Text>
-
-          <TouchableOpacity
-            style={[styles.langButton, lang === 'en' && styles.langButtonActive]}
-            onPress={() => handleLanguageChange('en')}
-            activeOpacity={0.7}
-          >
-            <View style={styles.langButtonLeft}>
-              <Image source={require('../../assets/flags/flag-gb.png')} style={styles.flagImage} />
-              <Text style={styles.langButtonText}>English</Text>
-            </View>
-            {lang === 'en' && <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.langButton, lang === 'si' && styles.langButtonActive]}
-            onPress={() => handleLanguageChange('si')}
-            activeOpacity={0.7}
-          >
-            <View style={styles.langButtonLeft}>
-              <Image source={require('../../assets/flags/flag-lk.png')} style={styles.flagImage} />
-              <Text style={styles.langButtonText}>සිංහල</Text>
-            </View>
-            {lang === 'si' && <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.langButton, styles.langButtonNoMargin, lang === 'ta' && styles.langButtonActive]}
-            onPress={() => handleLanguageChange('ta')}
-            activeOpacity={0.7}
-          >
-            <View style={styles.langButtonLeft}>
-              <Image source={require('../../assets/flags/flag-lk.png')} style={styles.flagImage} />
-              <Text style={styles.langButtonText}>தமிழ்</Text>
-            </View>
-            {lang === 'ta' && <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />}
-          </TouchableOpacity>
         </View>
 
         {/* App Info */}
@@ -187,7 +152,7 @@ const styles = StyleSheet.create({
     right: -40,
     width: 160,
     height: 160,
-    borderRadius: 80,
+    borderRadius: 84,
     backgroundColor: 'rgba(255,255,255,0.06)',
   },
   decorCircleSmall: {
@@ -198,6 +163,13 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 45,
     backgroundColor: 'rgba(249,168,37,0.12)',
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: SPACING.md,
+    right: SPACING.md,
+    zIndex: 10,
+    padding: 4,
   },
   avatarWrap: {
     width: 96,
@@ -258,39 +230,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: COLORS.textDark,
-  },
-  langButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: SPACING.sm + 2,
-    borderRadius: RADIUS.md,
-    borderWidth: 1.5,
-    borderColor: COLORS.border,
-    marginBottom: SPACING.sm,
-    backgroundColor: COLORS.background,
-  },
-  langButtonNoMargin: {
-    marginBottom: 0,
-  },
-  langButtonActive: {
-    backgroundColor: '#E8F5E9',
-    borderColor: COLORS.primary,
-  },
-  langButtonLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  flagImage: {
-    width: 32,
-    height: 24,
-    borderRadius: RADIUS.sm,
-    marginRight: SPACING.sm,
-  },
-  langButtonText: {
-    fontSize: 16,
-    color: COLORS.textDark,
-    fontWeight: '500',
   },
   aboutHeader: {
     flexDirection: 'row',

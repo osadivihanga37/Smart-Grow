@@ -49,7 +49,6 @@ class DiseaseForecastView(APIView):
         for result in forecast_results:
             disease = result['disease']
 
-            # Build translated alert message based on risk level
             risk_level = result['risk_level']
             if risk_level == 'LOW':
                 alert_msg = get_message('disease_low', lang, disease=disease.name)
@@ -63,7 +62,7 @@ class DiseaseForecastView(APIView):
                                         loss=int(disease.max_yield_loss_percent))
 
             alert = DiseaseAlert.objects.create(
-                farmer=request.user,
+                farmer_uid=request.user.uid,
                 disease=disease,
                 temperature_c=weather['temperature_c'],
                 humidity_percent=weather['humidity_percent'],
@@ -86,4 +85,4 @@ class DiseaseAlertHistoryView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return DiseaseAlert.objects.filter(farmer=self.request.user)
+        return DiseaseAlert.objects.filter(farmer_uid=self.request.user.uid)

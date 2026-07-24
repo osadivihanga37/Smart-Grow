@@ -9,6 +9,8 @@ import { t } from '../../translations'
 import LocationPermissionScreen from '../screens/LocationPermissionScreen'
 
 // Screens
+import WelcomeScreen from '../screens/WelcomeScreen'
+import AboutScreen from '../screens/AboutScreen'
 import LanguageSelectScreen from '../screens/LanguageSelectScreen'
 import LoginScreen from '../screens/LoginScreen'
 import RegisterScreen from '../screens/RegisterScreen'
@@ -17,11 +19,13 @@ import IrrigationScreen from '../screens/IrrigationScreen'
 import DiseaseScreen from '../screens/DiseaseScreen'
 import CropsAdvisoryScreen from '../screens/CropsAdvisoryScreen'
 import ProfileScreen from '../screens/ProfileScreen'
+import SettingsScreen from '../screens/SettingsScreen'
+import LocationTrackingScreen from '../screens/LocationTrackingScreen'
+import NotificationPermissionScreen from '../screens/NotificationPermissionScreen'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 
-// Bottom tab navigation — shown after login
 const FarmerTabs = () => {
   const { lang } = useLanguage()
 
@@ -58,10 +62,8 @@ const FarmerTabs = () => {
   )
 }
 
-// Main navigator — decides which screens to show
 const AppNavigator = () => {
-  const { token, loading, locationPrompted } = useAuth()
-
+  const { token, loading, locationPrompted, notificationPrompted } = useAuth()
   if (loading) return null
 
   return (
@@ -70,11 +72,20 @@ const AppNavigator = () => {
         {token ? (
           !locationPrompted ? (
             <Stack.Screen name="LocationPermission" component={LocationPermissionScreen} />
+          ) : !notificationPrompted ? (
+            <Stack.Screen name="NotificationPermission" component={NotificationPermissionScreen} />
           ) : (
-            <Stack.Screen name="Main" component={FarmerTabs} />
+            <>
+              <Stack.Screen name="Main" component={FarmerTabs} />
+              {/* Settings and Location Tracking are pushed on top of the tabs, not part of the tab bar itself */}
+              <Stack.Screen name="Settings" component={SettingsScreen} />
+              <Stack.Screen name="LocationTracking" component={LocationTrackingScreen} />
+            </>
           )
         ) : (
           <>
+            <Stack.Screen name="Welcome" component={WelcomeScreen} />
+            <Stack.Screen name="About" component={AboutScreen} />
             <Stack.Screen name="LanguageSelect" component={LanguageSelectScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />

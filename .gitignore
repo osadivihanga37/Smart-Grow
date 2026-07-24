@@ -7,6 +7,7 @@ Backend/db.sqlite3
 Backend/datadump.json
 Backend/.env
 Backend/staticfiles/
+Backend/firebase-credentials.json
 
 # --- Frontend (React Native/Expo) ---
 frontend/node_modules/
@@ -23,3 +24,7 @@ venv/
 .DS_Store
 Thumbs.db
 *.log
+
+# --- Thesis/academic docs (keep out of the code repo) ---
+*.docx
+*.doc

@@ -9,6 +9,7 @@ import { useLanguage } from '../context/LanguageContext'
 import { t } from '../../translations'
 import { getCrops, getIrrigationRecommendation } from '../services/api'
 import { COLORS, RADIUS, SPACING, SHADOW, TYPOGRAPHY } from '../theme'
+import { scheduleIrrigationReminder, cancelAllScheduledNotifications } from '../services/notifications'
 
 // Maps known DB crop names to translation keys.
 // Add more entries here as more crops are added to the backend.
@@ -62,6 +63,11 @@ export default function IrrigationScreen() {
         selectedCrop.id, LATITUDE, LONGITUDE, lang
       )
       setRecommendation(response.data)
+
+      // Refresh the irrigation reminder to match this new recommendation —
+      // cancel any previously scheduled one first so they don't stack up.
+      await cancelAllScheduledNotifications()
+      await scheduleIrrigationReminder(1)
     } catch (error) {
       Alert.alert('Error', t('error', lang))
     } finally {

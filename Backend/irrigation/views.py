@@ -9,6 +9,7 @@ from .weather_service import get_current_weather
 from .recommendation_engine import calculate_moisture_deficit, get_irrigation_decision
 from smartgrow.translations import get_message
 from smartgrow.language_utils import get_lang
+from smartgrow.firebase_config import get_firestore_client
 
 
 class CropWaterProfileListView(generics.ListAPIView):
@@ -54,9 +55,15 @@ class GetIrrigationRecommendationView(APIView):
             temperature_c=weather['temperature_c']
         )
 
+        # Farm size now lives in the farmer's Firestore profile doc, not
+        # Django's ORM (there's no more farmer_profile relation).
         farm_size = 1.0
-        if hasattr(request.user, 'farmer_profile') and request.user.farmer_profile.farm_size_acres:
-            farm_size = request.user.farmer_profile.farm_size_acres
+        db = get_firestore_client()
+        profile_doc = db.collection('farmer_profiles').document(request.user.uid).get()
+        if profile_doc.exists:
+            profile_data = profile_doc.to_dict()
+            if profile_data.get('farm_size_acres'):
+                farm_size = profile_data['farm_size_acres']
 
         decision = get_irrigation_decision(deficit, farm_size)
 
@@ -77,7 +84,7 @@ class GetIrrigationRecommendationView(APIView):
             )
 
         recommendation = IrrigationRecommendation.objects.create(
-            farmer=request.user,
+            farmer_uid=request.user.uid,
             crop=crop,
             temperature_c=weather['temperature_c'],
             humidity_percent=weather['humidity_percent'],
@@ -100,4 +107,4 @@ class IrrigationHistoryView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return IrrigationRecommendation.objects.filter(farmer=self.request.user)
+        return IrrigationRecommendation.objects.filter(farmer_uid=self.request.user.uid)

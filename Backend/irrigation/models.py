@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 
 class CropWaterProfile(models.Model):
@@ -16,7 +15,10 @@ class CropWaterProfile(models.Model):
 
 
 class IrrigationRecommendation(models.Model):
-    farmer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='irrigation_logs')
+    # Firebase Auth UID — no longer a ForeignKey to Django's User, since
+    # farmer identity/data now lives in Firebase Auth + Firestore.
+    farmer_uid = models.CharField(max_length=128, db_index=True)
+
     crop = models.ForeignKey(CropWaterProfile, on_delete=models.SET_NULL, null=True)
 
     # Weather snapshot
@@ -39,4 +41,4 @@ class IrrigationRecommendation(models.Model):
 
     def __str__(self):
         action = "Irrigate" if self.should_irrigate else "Skip"
-        return f"{self.farmer.username} - {self.crop} - {action} ({self.created_at.date()})"
+        return f"{self.farmer_uid} - {self.crop} - {action} ({self.created_at.date()})"

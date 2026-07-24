@@ -14,15 +14,15 @@ class DiseaseProfileAdmin(admin.ModelAdmin):
 @admin.register(DiseaseAlert)
 class DiseaseAlertAdmin(admin.ModelAdmin):
     list_display = (
-        'farmer', 'disease', 'risk_badge', 'risk_score',
+        'farmer_uid', 'disease', 'risk_badge', 'risk_score',
         'temperature_c', 'humidity_percent', 'created_at'
     )
     list_filter = ('risk_level', 'disease', 'created_at')
-    search_fields = ('farmer__username', 'farmer__email')
+    search_fields = ('farmer_uid',)
     ordering = ('-created_at',)
     date_hierarchy = 'created_at'
     list_per_page = 25
-    autocomplete_fields = ('farmer', 'disease')
+    autocomplete_fields = ('disease',)
     readonly_fields = (
         'risk_level', 'risk_score', 'temperature_c',
         'humidity_percent', 'created_at'

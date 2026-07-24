@@ -70,107 +70,75 @@ export default function CropsAdvisoryScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {/* Header */}
+        {/* Compact header */}
         <View style={styles.header}>
-          <Text style={[styles.decorIcon, styles.decorIcon1]}>🧅</Text>
-          <Text style={[styles.decorIcon, styles.decorIcon2]}>🧅</Text>
-          <View style={styles.headerRow}>
-            <View style={styles.headerIconWrap}>
-              <Text style={styles.headerIcon}>🧅</Text>
-            </View>
-            <View>
-              <Text style={styles.headerTitle}>{translateCropValue(advisory.crop_name, lang)}</Text>
-              <Text style={styles.headerSubtitle}>{translateCropValue(advisory.region, lang)}</Text>
-            </View>
+          <View style={styles.headerIconWrap}>
+            <Text style={styles.headerIcon}>🧅</Text>
+          </View>
+          <View style={styles.headerTextWrap}>
+            <Text style={styles.headerTitle}>{translateCropValue(advisory.crop_name, lang)}</Text>
+            <Text style={styles.headerSubtitle}>{translateCropValue(advisory.region, lang)}</Text>
           </View>
         </View>
 
-        <View style={styles.cardsWrap}>
+        {/* Compact 2-column grid */}
+        <View style={styles.grid}>
 
-          {/* Average Yield */}
-          <View style={styles.card}>
-            <View style={[styles.cardIconWrap, { backgroundColor: '#E8F5E9' }]}>
-              <Text style={styles.cardIcon}>📊</Text>
-            </View>
-            <View style={styles.cardTextWrap}>
-              <Text style={styles.cardLabel}>{t('averageYield', lang)}</Text>
-              <Text style={styles.cardValue}>
-                {advisory.average_yield_mt_per_ha} {t('perHectare', lang)}
-              </Text>
-            </View>
+          <View style={styles.gridCard}>
+            <Text style={styles.gridIcon}>📊</Text>
+            <Text style={styles.gridLabel}>{t('averageYield', lang)}</Text>
+            <Text style={styles.gridValue}>
+              {advisory.average_yield_mt_per_ha} {t('perHectare', lang)}
+            </Text>
           </View>
 
-          {/* Best Irrigation Method */}
-          <View style={styles.card}>
-            <View style={[styles.cardIconWrap, { backgroundColor: '#E3F2FD' }]}>
-              <Text style={styles.cardIcon}>💧</Text>
-            </View>
-            <View style={styles.cardTextWrap}>
-              <Text style={styles.cardLabel}>{t('bestIrrigationMethod', lang)}</Text>
-              <Text style={styles.cardValue}>{translateCropValue(advisory.best_irrigation_method, lang)}</Text>
-              <Text style={styles.cardSubValue}>
-                {t('yieldLabel', lang)}: {advisory.best_irrigation_yield} {t('perHectare', lang)}
-              </Text>
-            </View>
+          <View style={styles.gridCard}>
+            <Text style={styles.gridIcon}>💰</Text>
+            <Text style={styles.gridLabel}>{t('productionCost', lang)}</Text>
+            <Text style={styles.gridValue}>
+              Rs. {advisory.production_cost_per_kg} {t('perKg', lang)}
+            </Text>
           </View>
 
-          {/* Best Land Type */}
-          <View style={styles.card}>
-            <View style={[styles.cardIconWrap, { backgroundColor: '#FFF3E0' }]}>
-              <Text style={styles.cardIcon}>🌱</Text>
-            </View>
-            <View style={styles.cardTextWrap}>
-              <Text style={styles.cardLabel}>{t('bestLandType', lang)}</Text>
-              <Text style={styles.cardValue}>{translateCropValue(advisory.best_land_type, lang)}</Text>
-              <Text style={styles.cardSubValue}>
-                {t('yieldLabel', lang)}: {advisory.best_land_type_yield} {t('perHectare', lang)}
-              </Text>
-            </View>
+          <View style={styles.gridCard}>
+            <Text style={styles.gridIcon}>📅</Text>
+            <Text style={styles.gridLabel}>{t('harvestWindow', lang)}</Text>
+            <Text style={styles.gridValueSmall}>
+              {translateCropValue(advisory.harvest_start_month, lang)} – {translateCropValue(advisory.harvest_end_month, lang)}
+            </Text>
           </View>
 
-          {/* Best Seed Variety */}
-          <View style={styles.card}>
-            <View style={[styles.cardIconWrap, { backgroundColor: '#F3E5F5' }]}>
-              <Text style={styles.cardIcon}>🌾</Text>
-            </View>
-            <View style={styles.cardTextWrap}>
-              <Text style={styles.cardLabel}>{t('bestSeedVariety', lang)}</Text>
-              <Text style={styles.cardValue}>{translateCropValue(advisory.best_seed_variety, lang)}</Text>
-              <Text style={styles.cardSubValue}>
-                {t('yieldLabel', lang)}: {advisory.best_seed_variety_yield} {t('perHectare', lang)}
-              </Text>
-            </View>
+          <View style={styles.gridCard}>
+            <Text style={styles.gridIcon}>💧</Text>
+            <Text style={styles.gridLabel}>{t('bestIrrigationMethod', lang)}</Text>
+            <Text style={styles.gridValueSmall}>{translateCropValue(advisory.best_irrigation_method, lang)}</Text>
+            <Text style={styles.gridSubValue}>
+              {advisory.best_irrigation_yield} {t('perHectare', lang)}
+            </Text>
           </View>
 
-          {/* Harvest Window */}
-          <View style={styles.card}>
-            <View style={[styles.cardIconWrap, { backgroundColor: '#FFF8E1' }]}>
-              <Text style={styles.cardIcon}>📅</Text>
-            </View>
-            <View style={styles.cardTextWrap}>
-              <Text style={styles.cardLabel}>{t('harvestWindow', lang)}</Text>
-              <Text style={styles.cardValue}>
-                {translateCropValue(advisory.harvest_start_month, lang)} – {translateCropValue(advisory.harvest_end_month, lang)}
-              </Text>
-            </View>
+          <View style={styles.gridCard}>
+            <Text style={styles.gridIcon}>🌱</Text>
+            <Text style={styles.gridLabel}>{t('bestLandType', lang)}</Text>
+            <Text style={styles.gridValueSmall}>{translateCropValue(advisory.best_land_type, lang)}</Text>
+            <Text style={styles.gridSubValue}>
+              {advisory.best_land_type_yield} {t('perHectare', lang)}
+            </Text>
           </View>
 
-          {/* Production Cost */}
-          <View style={styles.card}>
-            <View style={[styles.cardIconWrap, { backgroundColor: '#FBE9E7' }]}>
-              <Text style={styles.cardIcon}>💰</Text>
-            </View>
-            <View style={styles.cardTextWrap}>
-              <Text style={styles.cardLabel}>{t('productionCost', lang)}</Text>
-              <Text style={styles.cardValue}>
-                Rs. {advisory.production_cost_per_kg} {t('perKg', lang)}
-              </Text>
-            </View>
+          <View style={styles.gridCard}>
+            <Text style={styles.gridIcon}>🌾</Text>
+            <Text style={styles.gridLabel}>{t('bestSeedVariety', lang)}</Text>
+            <Text style={styles.gridValueSmall}>{translateCropValue(advisory.best_seed_variety, lang)}</Text>
+            <Text style={styles.gridSubValue}>
+              {advisory.best_seed_variety_yield} {t('perHectare', lang)}
+            </Text>
           </View>
-
-          <Text style={styles.source}>{t('source', lang)}: {translateCropValue(advisory.data_source, lang)}</Text>
 
         </View>
+
+        <Text style={styles.source}>{t('source', lang)}: {translateCropValue(advisory.data_source, lang)}</Text>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -189,100 +157,87 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: COLORS.secondary,
-    padding: SPACING.md,
-    paddingTop: SPACING.sm,
-    borderBottomLeftRadius: RADIUS.xl,
-    borderBottomRightRadius: RADIUS.xl,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  decorIcon: {
-    position: 'absolute',
-    opacity: 0.15,
-  },
-  decorIcon1: {
-    top: -10,
-    right: 20,
-    fontSize: 60,
-  },
-  decorIcon2: {
-    bottom: -10,
-    right: 100,
-    fontSize: 30,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm + 2,
+    marginHorizontal: SPACING.md,
+    marginTop: SPACING.sm,
+    borderRadius: RADIUS.lg,
   },
   headerIconWrap: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     borderRadius: RADIUS.md,
     backgroundColor: 'rgba(255,255,255,0.25)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: SPACING.md,
+    marginRight: SPACING.sm,
   },
   headerIcon: {
-    fontSize: 24,
+    fontSize: 20,
+  },
+  headerTextWrap: {
+    flex: 1,
   },
   headerTitle: {
-    ...TYPOGRAPHY.h2,
+    fontSize: 17,
+    fontWeight: '700',
     color: '#fff',
   },
   headerSubtitle: {
-    ...TYPOGRAPHY.caption,
+    fontSize: 12,
     color: '#FFF8E1',
-    marginTop: 2,
+    marginTop: 1,
   },
-  cardsWrap: {
-    padding: SPACING.md,
-  },
-  card: {
-    backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
-    marginBottom: SPACING.sm,
+  grid: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingHorizontal: SPACING.md,
+    paddingTop: SPACING.md,
+  },
+  gridCard: {
+    width: '48.5%',
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.md,
+    padding: SPACING.sm + 2,
+    marginBottom: SPACING.sm,
     ...SHADOW.soft,
   },
-  cardIconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: RADIUS.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: SPACING.md,
-  },
-  cardIcon: {
-    fontSize: 22,
-  },
-  cardTextWrap: {
-    flex: 1,
-  },
-  cardLabel: {
-    ...TYPOGRAPHY.caption,
-    color: COLORS.textMuted,
+  gridIcon: {
+    fontSize: 18,
     marginBottom: 4,
   },
-  cardValue: {
-    fontSize: 16,
+  gridLabel: {
+    fontSize: 11,
+    color: COLORS.textMuted,
+    marginBottom: 3,
+  },
+  gridValue: {
+    fontSize: 15,
     fontWeight: '700',
     color: COLORS.textDark,
   },
-  cardSubValue: {
+  gridValueSmall: {
     fontSize: 13,
+    fontWeight: '700',
+    color: COLORS.textDark,
+    lineHeight: 17,
+  },
+  gridSubValue: {
+    fontSize: 11,
     color: COLORS.primary,
     marginTop: 2,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   source: {
-    fontSize: 12,
+    fontSize: 11,
     color: COLORS.textMuted,
     fontStyle: 'italic',
-    marginTop: SPACING.sm,
+    marginTop: SPACING.xs,
     marginBottom: SPACING.xl,
+    paddingHorizontal: SPACING.md,
     textAlign: 'center',
   },
   errorText: {

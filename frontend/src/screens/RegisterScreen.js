@@ -5,11 +5,26 @@ import {
   Platform, ScrollView, ActivityIndicator, Image
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import * as Location from 'expo-location'
+import { Ionicons } from '@expo/vector-icons'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import { t } from '../../translations'
 import { registerUser } from '../services/api'
+import { showValidationErrorNotification } from '../services/notifications'
+import { isWithinServiceArea, SERVICE_AREA_NAME } from '../utils/serviceArea'
 import { COLORS, RADIUS, SPACING, SHADOW, TYPOGRAPHY } from '../theme'
+
+// Sri Lanka's 25 districts
+const DISTRICTS = [
+  'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo',
+  'Galle', 'Gampaha', 'Hambantota', 'Jaffna', 'Kalutara',
+  'Kandy', 'Kegalle', 'Kilinochchi', 'Kurunegala', 'Mannar',
+  'Matale', 'Matara', 'Monaragala', 'Mullaitivu', 'Nuwara Eliya',
+  'Polonnaruwa', 'Puttalam', 'Ratnapura', 'Trincomalee', 'Vavuniya',
+]
+
+const GMAIL_REGEX = /^[^\s@]+@gmail\.com$/i
 
 export default function RegisterScreen({ navigation }) {
   const { lang } = useLanguage()
@@ -18,20 +33,105 @@ export default function RegisterScreen({ navigation }) {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [age, setAge] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
-  const [district, setDistrict] = useState('Dambulla')
+  const [district, setDistrict] = useState('')
+  const [coords, setCoords] = useState(null) // { latitude, longitude }
+  const [locating, setLocating] = useState(false)
+  const [outOfServiceArea, setOutOfServiceArea] = useState(false)
   const [loading, setLoading] = useState(false)
   const [focusedField, setFocusedField] = useState(null)
 
-  const handleRegister = async () => {
+  const handleAgeChange = (value) => {
+    const numericOnly = value.replace(/[^0-9]/g, '')
+    setAge(numericOnly)
+  }
+
+  const passwordsMismatch = confirmPassword.length > 0 && password !== confirmPassword
+
+  // Location is now REQUIRED and gated by service area: Smart Grow currently
+  // only supports the Dambulla region, so registration is blocked until a
+  // farmer's detected location falls within that service area.
+  const isFormValid =
+    username.trim().length > 0 &&
+    GMAIL_REGEX.test(email) &&
+    password.length >= 6 &&
+    password === confirmPassword &&
+    district.length > 0 &&
+    coords !== null &&
+    !outOfServiceArea
+
+  const handleDetectLocation = async () => {
+    setLocating(true)
+    setOutOfServiceArea(false)
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== 'granted') {
+        Alert.alert('Permission needed', t('locationPermissionRequired', lang))
+        return
+      }
+      const position = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      })
+      const { latitude, longitude } = position.coords
+
+      if (!isWithinServiceArea(latitude, longitude)) {
+        setCoords(null)
+        setOutOfServiceArea(true)
+        Alert.alert(
+          t('outsideServiceArea', lang),
+          t('outsideServiceAreaDesc', lang)
+        )
+        return
+      }
+
+      setCoords({ latitude, longitude })
+    } catch (err) {
+      Alert.alert(t('error', lang), t('couldNotDetectLocation', lang))
+    } finally {
+      setLocating(false)
+    }
+  }
+
+  const validate = () => {
     if (!username || !password) {
       Alert.alert('Error', t('missing_fields', lang) || t('error', lang))
-      return
+      return false
+    }
+    if (!GMAIL_REGEX.test(email)) {
+      const message = t('invalidGmail', lang)
+      Alert.alert('Error', message)
+      showValidationErrorNotification('Invalid Email', message)
+      return false
     }
     if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters')
-      return
+      const message = t('passwordTooShort', lang)
+      Alert.alert('Error', message)
+      showValidationErrorNotification('Weak Password', message)
+      return false
     }
+    if (password !== confirmPassword) {
+      const message = t('passwordsDontMatch', lang)
+      Alert.alert('Error', message)
+      showValidationErrorNotification('Password Mismatch', message)
+      return false
+    }
+    if (age && (parseInt(age, 10) < 16 || parseInt(age, 10) > 100)) {
+      Alert.alert('Error', t('invalidAge', lang))
+      return false
+    }
+    if (!district) {
+      Alert.alert('Error', t('selectDistrict', lang))
+      return false
+    }
+    return true
+  }
+
+  const handleRegister = async () => {
+    if (!validate()) return
 
     setLoading(true)
     try {
@@ -39,8 +139,11 @@ export default function RegisterScreen({ navigation }) {
         username,
         email,
         password,
+        age: age ? parseInt(age, 10) : undefined,
         phone_number: phoneNumber,
         district,
+        latitude: coords?.latitude,
+        longitude: coords?.longitude,
       })
       await login(response.data.token, response.data.user)
     } catch (error) {
@@ -74,6 +177,39 @@ export default function RegisterScreen({ navigation }) {
     </>
   )
 
+  const renderPasswordInput = (fieldKey, label, value, onChangeText, show, setShow) => (
+    <>
+      <Text style={styles.label}>{label}</Text>
+      <View
+        style={[
+          styles.passwordRow,
+          focusedField === fieldKey && styles.inputFocused,
+        ]}
+      >
+        <TextInput
+          style={styles.passwordInput}
+          placeholder={label}
+          placeholderTextColor={COLORS.textMuted}
+          value={value}
+          onChangeText={onChangeText}
+          secureTextEntry={!show}
+          onFocus={() => setFocusedField(fieldKey)}
+          onBlur={() => setFocusedField(null)}
+        />
+        <TouchableOpacity
+          onPress={() => setShow((prev) => !prev)}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
+          <Ionicons
+            name={show ? 'eye-off-outline' : 'eye-outline'}
+            size={20}
+            color={COLORS.textMuted}
+          />
+        </TouchableOpacity>
+      </View>
+    </>
+  )
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -82,7 +218,6 @@ export default function RegisterScreen({ navigation }) {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
 
-          {/* Header */}
           <View style={styles.header}>
             <View style={styles.decorCircleLarge} />
             <View style={styles.decorCircleSmall} />
@@ -97,20 +232,80 @@ export default function RegisterScreen({ navigation }) {
             <Text style={styles.subtitle}>{t('register', lang)}</Text>
           </View>
 
-          {/* Form Card */}
           <View style={styles.form}>
 
             {renderInput('username', `${t('username', lang)} *`, username, setUsername, { autoCapitalize: 'none' })}
-            {renderInput('email', t('email', lang), email, setEmail, { autoCapitalize: 'none', keyboardType: 'email-address' })}
-            {renderInput('password', `${t('password', lang)} *`, password, setPassword, { secureTextEntry: true })}
-            {renderInput('phone', t('phone', lang), phoneNumber, setPhoneNumber, { keyboardType: 'phone-pad' })}
-            {renderInput('district', t('district', lang), district, setDistrict)}
+            {renderInput('email', `${t('email', lang)} * (@gmail.com)`, email, setEmail, { autoCapitalize: 'none', keyboardType: 'email-address' })}
 
-            {/* Register Button */}
+            {renderPasswordInput('password', `${t('password', lang)} *`, password, setPassword, showPassword, setShowPassword)}
+            {renderPasswordInput('confirmPassword', `${t('confirmPassword', lang)} *`, confirmPassword, setConfirmPassword, showConfirmPassword, setShowConfirmPassword)}
+            {passwordsMismatch && (
+              <Text style={styles.errorText}>{t('passwordsDontMatch', lang)}</Text>
+            )}
+
+            {renderInput('age', t('age', lang), age, handleAgeChange, { keyboardType: 'numeric', maxLength: 3 })}
+            {renderInput('phone', t('phone', lang), phoneNumber, setPhoneNumber, { keyboardType: 'phone-pad' })}
+
+            {/* District chips */}
+            <Text style={styles.label}>{t('district', lang)} *</Text>
+            <View style={styles.chipRow}>
+              {DISTRICTS.map((d) => (
+                <TouchableOpacity
+                  key={d}
+                  style={[styles.chip, district === d && styles.chipSelected]}
+                  onPress={() => setDistrict(d)}
+                >
+                  <Text style={[styles.chipText, district === d && styles.chipTextSelected]}>
+                    {d}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Location detection — now REQUIRED, gated by Dambulla service area */}
+            <Text style={styles.label}>{t('location', lang)} *</Text>
             <TouchableOpacity
-              style={styles.registerButton}
+              style={[
+                styles.locationButton,
+                outOfServiceArea && styles.locationButtonError,
+              ]}
+              onPress={handleDetectLocation}
+              disabled={locating}
+            >
+              <Ionicons
+                name={outOfServiceArea ? 'alert-circle-outline' : 'location-outline'}
+                size={18}
+                color={outOfServiceArea ? COLORS.danger : COLORS.primary}
+              />
+              <Text
+                style={[
+                  styles.locationButtonText,
+                  outOfServiceArea && { color: COLORS.danger },
+                ]}
+              >
+                {locating
+                  ? t('detectingLocation', lang)
+                  : outOfServiceArea
+                    ? `${t('outsideServiceArea', lang)} — tap to retry`
+                    : coords
+                      ? `Location set (${coords.latitude.toFixed(3)}, ${coords.longitude.toFixed(3)})`
+                      : t('detectLocation', lang)}
+              </Text>
+            </TouchableOpacity>
+            {outOfServiceArea && (
+              <Text style={styles.errorText}>
+                {t('outsideServiceAreaDesc', lang)}
+              </Text>
+            )}
+
+            {/* Register Button — disabled until required fields above are valid */}
+            <TouchableOpacity
+              style={[
+                styles.registerButton,
+                (!isFormValid || loading) && styles.registerButtonDisabled,
+              ]}
               onPress={handleRegister}
-              disabled={loading}
+              disabled={loading || !isFormValid}
               activeOpacity={0.8}
             >
               {loading ? (
@@ -122,7 +317,12 @@ export default function RegisterScreen({ navigation }) {
               )}
             </TouchableOpacity>
 
-            {/* Login Link */}
+            {!isFormValid && (
+              <Text style={styles.helperText}>
+                {t('registerHelperText', lang)}
+              </Text>
+            )}
+
             <TouchableOpacity
               style={styles.loginLink}
               onPress={() => navigation.navigate('Login')}
@@ -132,7 +332,6 @@ export default function RegisterScreen({ navigation }) {
               </Text>
             </TouchableOpacity>
 
-            {/* Back to Language */}
             <TouchableOpacity
               style={styles.backLink}
               onPress={() => navigation.navigate('LanguageSelect')}
@@ -237,6 +436,71 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     backgroundColor: '#fff',
   },
+  passwordRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.md,
+    paddingHorizontal: SPACING.md,
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingVertical: SPACING.md,
+    fontSize: 16,
+    color: COLORS.textDark,
+  },
+  errorText: {
+    color: COLORS.danger,
+    fontSize: 12,
+    marginTop: 4,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACING.xs,
+  },
+  chip: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: RADIUS.full,
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.surface,
+    marginBottom: SPACING.xs,
+  },
+  chipSelected: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  chipText: {
+    fontSize: 12,
+    color: COLORS.textDark,
+  },
+  chipTextSelected: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  locationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
+    gap: SPACING.xs,
+  },
+  locationButtonError: {
+    borderColor: COLORS.danger,
+    backgroundColor: '#FDECEA',
+  },
+  locationButtonText: {
+    color: COLORS.textDark,
+    fontSize: 13,
+    flexShrink: 1,
+  },
   registerButton: {
     backgroundColor: COLORS.primary,
     borderRadius: RADIUS.md,
@@ -245,10 +509,23 @@ const styles = StyleSheet.create({
     marginTop: SPACING.lg,
     ...SHADOW.soft,
   },
+  registerButtonDisabled: {
+    backgroundColor: COLORS.border,
+    ...SHADOW.soft,
+    shadowOpacity: 0,
+    elevation: 0,
+  },
   registerButtonText: {
     color: '#fff',
     fontSize: 17,
     fontWeight: '700',
+  },
+  helperText: {
+    color: COLORS.textMuted,
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: SPACING.sm,
+    lineHeight: 16,
   },
   loginLink: {
     alignItems: 'center',
