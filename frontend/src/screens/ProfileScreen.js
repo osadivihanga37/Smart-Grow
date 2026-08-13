@@ -85,6 +85,24 @@ export default function ProfileScreen({ navigation }) {
           </View>
         </View>
 
+        {/* Irrigation History — button linking to full history screen */}
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.navigate('IrrigationHistory')}
+          activeOpacity={0.7}
+        >
+          <View style={styles.historyButtonRow}>
+            <View style={styles.historyIconWrap}>
+              <Text style={styles.historyIcon}>💧</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>Irrigation History</Text>
+              <Text style={styles.historySubtext}>View all your past recommendations</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
+          </View>
+        </TouchableOpacity>
+
         {/* App Info */}
         <View style={styles.card}>
           <View style={styles.aboutHeader}>
@@ -97,7 +115,7 @@ export default function ProfileScreen({ navigation }) {
             Smart Grow is an intelligent irrigation and disease forecasting platform
             designed for Big Onion farmers in Dambulla, Sri Lanka.
           </Text>
-          <Text style={styles.sourcesHeading}>📚 Research Sources:</Text>
+          <Text style={styles.sourcesHeading}> Research Sources:</Text>
           <View style={styles.sourceItem}>
             <Text style={styles.sourceBullet}>•</Text>
             <Text style={styles.sourceText}>Sumanaratne (1999) — FCRDI, Irrigation Water Requirements</Text>
@@ -231,6 +249,30 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.textDark,
   },
+
+  // Irrigation history button
+  historyButtonRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  historyIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: RADIUS.sm,
+    backgroundColor: '#E3F2FD',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: SPACING.sm,
+  },
+  historyIcon: {
+    fontSize: 16,
+  },
+  historySubtext: {
+    fontSize: 12,
+    color: COLORS.textMuted,
+    marginTop: 1,
+  },
+
   aboutHeader: {
     flexDirection: 'row',
     alignItems: 'center',

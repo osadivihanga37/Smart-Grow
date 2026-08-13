@@ -99,6 +99,9 @@ export const getCropAdvisory = (crop_name, lang) =>
     params: { lang },
   })
 
+export const getCropAdvisoryList = (lang) =>
+  api.get('/crops/advisory/', { params: { lang } })
+
 export const loginUser = (username, password, lang) =>
   api.post('/users/login/', { username, password, lang })
 

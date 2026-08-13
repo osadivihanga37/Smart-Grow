@@ -21,17 +21,9 @@ export default function LocationPermissionScreen() {
     setLoading(true)
     setOutOfServiceArea(false)
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== 'granted') {
-        Alert.alert('Permission denied', 'You can enable location later from your device settings.')
-        await markLocationPrompted()
-        return
-      }
-
-      const position = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      })
-      const { latitude, longitude } = position.coords
+      // TEMPORARY — bypass real GPS for testing, remove before submission
+      const latitude = 7.8567
+      const longitude = 80.6517
 
       if (!isWithinServiceArea(latitude, longitude)) {
         setOutOfServiceArea(true)

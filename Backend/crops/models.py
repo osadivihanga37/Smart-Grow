@@ -30,6 +30,10 @@ class CropAdvisory(models.Model):
     data_source = models.CharField(
         max_length=200, default="DCS Big Onion Survey 2021 (Yala Season)"
     )
+    is_available = models.BooleanField(
+        default=True,
+        help_text="False = shown in app as a locked/'coming soon' crop, advisory data not yet populated",
+    )
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

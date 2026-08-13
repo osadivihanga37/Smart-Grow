@@ -26,6 +26,11 @@ MESSAGES = {
         'si': 'බෝගය හමු නොවීය.',
         'ta': 'பயிர் கண்டுபிடிக்கப்படவில்லை.',
     },
+    'crop_not_available': {
+        'en': 'This crop is not yet supported. Support is coming soon.',
+        'si': 'මෙම බෝගය තවම සහාය නොදක්වයි. සහාය ඉක්මනින් ලැබෙනු ඇත.',
+        'ta': 'இந்த பயிருக்கு இன்னும் ஆதரவு இல்லை. ஆதரவு விரைவில் கிடைக்கும்.',
+    },
     'crop_advisory_fetched': {
         'en': 'Crop advisory data retrieved successfully.',
         'si': 'බෝග උපදේශන දත්ත සාර්ථකව ලබා ගන්නා ලදී.',

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   View, Text, StyleSheet, ScrollView,
-  TouchableOpacity, ActivityIndicator, RefreshControl, Image
+  TouchableOpacity, ActivityIndicator, RefreshControl, Image, Dimensions
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
@@ -11,10 +11,16 @@ import { t } from '../../translations'
 import { getDiseaseForecast } from '../services/api'
 import { COLORS, RADIUS, SPACING, SHADOW, TYPOGRAPHY } from '../theme'
 
+const { width } = Dimensions.get('window')
+
 const LANG_TABS = [
   { code: 'en', label: 'English' },
   { code: 'si', label: 'සිංහල' },
   { code: 'ta', label: 'தமிழ்' },
+]
+
+const HERO_IMAGES = [
+  require('../../assets/images/hero-farm.jpg'),
 ]
 
 export default function HomeScreen({ navigation }) {
@@ -23,6 +29,8 @@ export default function HomeScreen({ navigation }) {
   const [weather, setWeather] = useState(null)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
+  const [heroIndex, setHeroIndex] = useState(0)
+  const heroScrollRef = useRef(null)
 
   const LATITUDE = 7.8567
   const LONGITUDE = 80.6517
@@ -48,6 +56,11 @@ export default function HomeScreen({ navigation }) {
     fetchWeather()
   }
 
+  const handleHeroScroll = (event) => {
+    const index = Math.round(event.nativeEvent.contentOffset.x / width)
+    setHeroIndex(index)
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -55,15 +68,26 @@ export default function HomeScreen({ navigation }) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {/* Hero Section */}
+        {/* Hero Section — swipeable carousel */}
         <View style={styles.hero}>
-          <Image
-            source={require('../../assets/images/hero-farm.jpg')}
-            style={styles.heroImage}
-            resizeMode="cover"
-          />
-          <View style={styles.heroOverlay} />
-          <View style={styles.heroContent}>
+          <ScrollView
+            ref={heroScrollRef}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onMomentumScrollEnd={handleHeroScroll}
+          >
+            {HERO_IMAGES.map((img, index) => (
+              <Image
+                key={index}
+                source={img}
+                style={styles.heroImage}
+                resizeMode="cover"
+              />
+            ))}
+          </ScrollView>
+          <View style={styles.heroOverlay} pointerEvents="none" />
+          <View style={styles.heroContent} pointerEvents="none">
             <View style={styles.heroBadgeRow}>
               <Image
                 source={require('../../assets/logo.png')}
@@ -74,6 +98,14 @@ export default function HomeScreen({ navigation }) {
                 <Text style={styles.heroWelcomeLabel}>{t('welcome!', lang).toUpperCase()}</Text>
                 <Text style={styles.heroUsername}>{user?.username || 'Farmer'}</Text>
               </View>
+            </View>
+            <View style={styles.heroDots}>
+              {HERO_IMAGES.map((_, index) => (
+                <View
+                  key={index}
+                  style={[styles.heroDot, heroIndex === index && styles.heroDotActive]}
+                />
+              ))}
             </View>
           </View>
         </View>
@@ -186,6 +218,15 @@ export default function HomeScreen({ navigation }) {
         </View>
 
       </ScrollView>
+
+      {/* Floating chatbot button */}
+      <TouchableOpacity
+        style={styles.fabButton}
+        onPress={() => navigation.navigate('FAQ')}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="chatbubble-ellipses" size={28} color="#fff" />
+      </TouchableOpacity>
     </SafeAreaView>
   )
 }
@@ -200,8 +241,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   heroImage: {
-    width: '100%',
-    height: '100%',
+    width,
+    height: 220,
   },
   heroOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -242,6 +283,21 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0,0,0,0.3)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
+  },
+  heroDots: {
+    flexDirection: 'row',
+    marginTop: SPACING.sm,
+  },
+  heroDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255,255,255,0.4)',
+    marginRight: 5,
+  },
+  heroDotActive: {
+    backgroundColor: '#fff',
+    width: 16,
   },
   weatherCard: {
     backgroundColor: COLORS.surface,
@@ -387,5 +443,17 @@ const styles = StyleSheet.create({
     color: COLORS.textMuted,
     fontStyle: 'italic',
     marginTop: 4,
+  },
+  fabButton: {
+    position: 'absolute',
+    bottom: 24,
+    right: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...SHADOW.card,
   },
 })

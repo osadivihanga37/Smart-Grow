@@ -37,13 +37,15 @@ export const translations = {
     checkDisease: 'Check Disease Risk',
     irrigationTitle: 'Irrigation Recommendation',
     selectCrop: 'Select Crop',
+    comingSoon: 'Coming Soon',
+    comingSoonMessage: 'Support for this crop is coming soon.',
     getAdvice: 'Get Advice',
     shouldIrrigate: 'Should Irrigate',
     waterVolume: 'Water Volume (liters)',
     moistureDeficit: 'Moisture Deficit (mm)',
     yes: 'Yes',
     no: 'No',
-    diseaseTitle: 'Disease Risk Forecast',
+    diseaseTitle: 'Big Onion Disease Risk Forecast',
     riskLevel: 'Risk Level',
     checkRisk: 'Check Disease Risk',
     low: 'LOW',
@@ -143,6 +145,15 @@ export const translations = {
     nameCannotBeEmpty: 'Name cannot be empty.',
     couldNotUpdateProfile: 'Could not update profile. Please try again.',
     couldNotDeleteAccount: 'Could not delete account. Please try again.',
+
+    // ─── FAQ ───────────────────────────────────────────────────────────────
+    faqTitle: 'FAQ',
+    faq_greeting: 'Ask me anything about Smart Grow!',
+    faq_placeholder: 'Type your question...',
+    send: 'Send',
+
+    cropAdvisoryTitle: 'Crop Advisory',
+    cropAdvisorySubtitle: 'Compare crop performance data',
   },
 
   si: {
@@ -183,13 +194,15 @@ export const translations = {
     checkDisease: 'රෝග අවදානම පරීක්ෂා කරන්න',
     irrigationTitle: 'ජල ප්‍රමාණ නිර්දේශය',
     selectCrop: 'බෝගය තෝරන්න',
+    comingSoon: 'ඉක්මනින්',
+    comingSoonMessage: 'මෙම බෝගය සඳහා සහාය ඉක්මනින් ලැබෙනු ඇත.',
     getAdvice: 'උපදෙස් ලබාගන්න',
     shouldIrrigate: 'වතුර දිය යුතුද',
     waterVolume: 'ජල ප්‍රමාණය (ලීටර්)',
     moistureDeficit: 'තෙතමන හිඟය (mm)',
     yes: 'ඔව්',
     no: 'නැත',
-    diseaseTitle: 'රෝග අවදානම',
+    diseaseTitle: 'රට ලූනු රෝග අවදානම',
     riskLevel: 'අවදානම් මට්ටම',
     checkRisk: 'රෝග අවදානම පරීක්ෂා කරන්න',
     low: 'අඩු',
@@ -222,7 +235,7 @@ export const translations = {
     currentConditions: 'වර්තමාන කාලගුණ තත්ත්වය',
     diseaseRiskResults: 'රෝග අවදානම් ප්‍රතිඵල',
     riskScore: 'අවදානම් ලකුණු',
-    tapToCheckDisease: 'ඔබේ රතු ලූනු බෝගයේ අද දින රෝග අවදානම පරීක්ෂා කිරීමට ඉහත බොත්තම ඔබන්න',
+    tapToCheckDisease: 'ඔබේ රට ලූනු බෝගයේ අද දින රෝග අවදානම පරීක්ෂා කිරීමට ඉහත බොත්තම ඔබන්න',
     locationDambulla: 'දඹුල්ල, ශ්‍රී ලංකාව',
     result: 'ප්‍රතිඵලය',
 
@@ -289,7 +302,16 @@ export const translations = {
     nameCannotBeEmpty: 'නම හිස් විය නොහැක.',
     couldNotUpdateProfile: 'පැතිකඩ යාවත්කාලීන කළ නොහැකි විය. නැවත උත්සාහ කරන්න.',
     couldNotDeleteAccount: 'ගිණුම මකා දැමිය නොහැකි විය. නැවත උත්සාහ කරන්න.',
+    
+    // ─── FAQ ───────────────────────────────────────────────────────────────
+    faqTitle: 'නිතර අසන ප්‍රශ්න',
+    faq_greeting: 'ස්මාර්ට් ග්‍රෝ ගැන ඕනෑම දෙයක් අහන්න!',
+    faq_placeholder: 'ඔබේ ප්‍රශ්නය ටයිප් කරන්න...',
+    send: 'යවන්න',
+    cropAdvisoryTitle: 'බෝග උපදේශනය',
+    cropAdvisorySubtitle: 'බෝග කාර්ය සාධන දත්ත සසඳන්න',
   },
+
 
   ta: {
     home: 'முகப்பு',
@@ -329,13 +351,15 @@ export const translations = {
     checkDisease: 'நோய் அபாயத்தை சரிபார்க்கவும்',
     irrigationTitle: 'நீர்ப்பாசன பரிந்துரை',
     selectCrop: 'பயிரை தேர்வு செய்யவும்',
+    comingSoon: 'விரைவில்',
+    comingSoonMessage: 'இந்த பயிருக்கான ஆதரவு விரைவில் கிடைக்கும்.',
     getAdvice: 'ஆலோசனை பெறவும்',
     shouldIrrigate: 'நீர்ப்பாசனம் செய்ய வேண்டுமா',
     waterVolume: 'நீர் அளவு (லிட்டர்)',
     moistureDeficit: 'ஈரப்பத பற்றாக்குறை (mm)',
     yes: 'ஆம்',
     no: 'இல்லை',
-    diseaseTitle: 'நோய் அபாய முன்னறிவிப்பு',
+    diseaseTitle:'சிவப்பு வெங்காய நோய் முன்னறிவிப்பு',
     riskLevel: 'ஆபத்து நிலை',
     checkRisk: 'நோய் அபாயத்தை சரிபார்க்கவும்',
     low: 'குறைந்த',
@@ -435,6 +459,14 @@ export const translations = {
     nameCannotBeEmpty: 'பெயர் காலியாக இருக்க முடியாது.',
     couldNotUpdateProfile: 'சுயவிவரத்தை புதுப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
     couldNotDeleteAccount: 'கணக்கை நீக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
+  
+    // ─── FAQ ───────────────────────────────────────────────────────────────
+    faqTitle: 'அடிக்கடி கேட்கப்படும் கேள்விகள்',
+    faq_greeting: 'ஸ்மார்ட் க்ரோ பற்றி எதுவும் கேளுங்கள்!',
+    faq_placeholder: 'உங்கள் கேள்வியை தட்டச்சு செய்யவும்...',
+    send: 'அனுப்பு',
+    cropAdvisoryTitle: 'பயிர் ஆலோசனை',
+    cropAdvisorySubtitle: 'பயிர் செயல்திறன் தரவை ஒப்பிடவும்',
   },
 }
 

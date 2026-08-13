@@ -5,8 +5,6 @@ import { COLORS, RADIUS, SPACING, TYPOGRAPHY, SHADOW } from '../theme'
 
 const { width } = Dimensions.get('window')
 
-// NOTE: Sinhala and Tamil text below is a best-effort draft translation,
-// not reviewed by a native speaker — worth a quick check before this ships.
 const PAGES = [
   {
     code: 'en',

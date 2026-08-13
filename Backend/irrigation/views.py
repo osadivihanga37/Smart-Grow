@@ -41,6 +41,14 @@ class GetIrrigationRecommendationView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        if not crop.is_available:
+            # Server-side enforcement of the "coming soon" lock, so a modified
+            # client can't bypass the frontend's disabled crop selection.
+            return Response(
+                {'error': get_message('crop_not_available', lang)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         weather = get_current_weather(latitude, longitude)
         if weather is None:
             return Response(

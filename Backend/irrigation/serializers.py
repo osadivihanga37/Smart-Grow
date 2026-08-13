@@ -5,7 +5,7 @@ from .models import CropWaterProfile, IrrigationRecommendation
 class CropWaterProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CropWaterProfile
-        fields = ['id', 'crop_name', 'daily_water_requirement_mm', 'optimal_soil_moisture_percent']
+        fields = ['id', 'crop_name', 'daily_water_requirement_mm', 'optimal_soil_moisture_percent', 'is_available']
 
 
 class IrrigationRecommendationSerializer(serializers.ModelSerializer):

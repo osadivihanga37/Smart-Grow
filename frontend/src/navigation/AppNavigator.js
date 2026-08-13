@@ -20,6 +20,8 @@ import DiseaseScreen from '../screens/DiseaseScreen'
 import CropsAdvisoryScreen from '../screens/CropsAdvisoryScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 import SettingsScreen from '../screens/SettingsScreen'
+import FAQScreen from '../screens/FAQScreen'
+import IrrigationHistoryScreen from '../screens/IrrigationHistoryScreen'
 import LocationTrackingScreen from '../screens/LocationTrackingScreen'
 import NotificationPermissionScreen from '../screens/NotificationPermissionScreen'
 
@@ -80,6 +82,8 @@ const AppNavigator = () => {
               {/* Settings and Location Tracking are pushed on top of the tabs, not part of the tab bar itself */}
               <Stack.Screen name="Settings" component={SettingsScreen} />
               <Stack.Screen name="LocationTracking" component={LocationTrackingScreen} />
+              <Stack.Screen name="FAQ" component={FAQScreen} />            
+              <Stack.Screen name="IrrigationHistory" component={IrrigationHistoryScreen} />
             </>
           )
         ) : (

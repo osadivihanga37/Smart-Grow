@@ -5,7 +5,8 @@ from .models import CropWaterProfile, IrrigationRecommendation
 
 @admin.register(CropWaterProfile)
 class CropWaterProfileAdmin(admin.ModelAdmin):
-    list_display = ('crop_name', 'daily_water_requirement_mm', 'optimal_soil_moisture_percent')
+    list_display = ('crop_name', 'daily_water_requirement_mm', 'optimal_soil_moisture_percent', 'is_available')
+    list_filter = ('is_available',)
     search_fields = ('crop_name',)
     ordering = ('crop_name',)
 

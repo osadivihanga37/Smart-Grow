@@ -9,6 +9,10 @@ class CropWaterProfile(models.Model):
     optimal_soil_moisture_percent = models.FloatField(
         help_text="Ideal soil moisture percentage for this crop"
     )
+    is_available = models.BooleanField(
+        default=True,
+        help_text="False = shown in app as a locked/'coming soon' crop, not yet supported for recommendations",
+    )
 
     def __str__(self):
         return self.crop_name

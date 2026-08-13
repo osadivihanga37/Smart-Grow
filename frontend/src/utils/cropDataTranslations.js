@@ -7,6 +7,13 @@ const CROP_DATA_TRANSLATIONS = {
   'Big Onion': { en: 'Big Onion', si: 'රතු ලූනු', ta: 'சிவப்பு வெங்காயம்' },
   'Dambulla': { en: 'Dambulla', si: 'දඹුල්ල', ta: 'தம்புள்ளை' },
 
+  // Locked / "coming soon" crops — names only, no advisory data yet.
+  'Red Onion': { en: 'Red Onion', si: 'රතු ළූණු', ta: 'சிவப்பு வெங்காயம் (சிறிய)' },
+  'Chilli': { en: 'Chilli', si: 'මිරිස්', ta: 'மிளகாய்' },
+  'Potato': { en: 'Potato', si: 'අර්තාපල්', ta: 'உருளைக்கிழங்கு' },
+  'Tomato': { en: 'Tomato', si: 'තක්කාලි', ta: 'தக்காளி' },
+  'Maize': { en: 'Maize', si: 'ඉරිඟු', ta: 'சோளம்' },
+
   'Agri Well + Irrigation System': {
     en: 'Agri Well + Irrigation System',
     si: 'ගොවි ළිං + වාරි පද්ධතිය',

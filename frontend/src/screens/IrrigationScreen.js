@@ -15,12 +15,31 @@ import { scheduleIrrigationReminder, cancelAllScheduledNotifications } from '../
 // Add more entries here as more crops are added to the backend.
 const CROP_NAME_TRANSLATIONS = {
   'Big Onion': { en: 'Big Onion', si: 'රතු ලූනු', ta: 'சிவப்பு வெங்காயம்' },
+  // Locked / "coming soon" crops — names only, no functional data yet.
+  'Red Onion': { en: 'Red Onion', si: 'රතු ළූණු', ta: 'சிவப்பு வெங்காயம் (சிறிய)' },
+  'Chilli': { en: 'Chilli', si: 'මිරිස්', ta: 'மிளகாய்' },
+  'Potato': { en: 'Potato', si: 'අර්තාපල්', ta: 'உருளைக்கிழங்கு' },
+  'Tomato': { en: 'Tomato', si: 'තක්කාලි', ta: 'தக்காளி' },
+  'Maize': { en: 'Maize', si: 'ඉරිඟු', ta: 'சோளம்' },
+}
+
+// Icon shown per crop — falls back to a generic plant icon for crops
+// that don't have a dedicated emoji mapped yet.
+const CROP_ICONS = {
+  'Big Onion': '🧅',
+  'Red Onion': '🧅',
+  'Chilli': '🌶️',
+  'Potato': '🥔',
+  'Tomato': '🍅',
+  'Maize': '🌽',
 }
 
 const getCropDisplayName = (cropName, lang) => {
   const entry = CROP_NAME_TRANSLATIONS[cropName]
   return entry ? (entry[lang] || entry.en) : cropName
 }
+
+const getCropIcon = (cropName) => CROP_ICONS[cropName] || '🌱'
 
 export default function IrrigationScreen() {
   const { lang } = useLanguage()
@@ -29,6 +48,8 @@ export default function IrrigationScreen() {
   const [recommendation, setRecommendation] = useState(null)
   const [loading, setLoading] = useState(false)
   const [loadingCrops, setLoadingCrops] = useState(true)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [hasManuallySelected, setHasManuallySelected] = useState(false)
 
   const LATITUDE = 7.8567
   const LONGITUDE = 80.6517
@@ -41,14 +62,25 @@ export default function IrrigationScreen() {
     try {
       const response = await getCrops()
       setCrops(response.data)
-      if (response.data.length > 0) {
-        setSelectedCrop(response.data[0])
+      const firstAvailable = response.data.find(c => c.is_available !== false)
+      if (firstAvailable) {
+        setSelectedCrop(firstAvailable)
       }
     } catch (error) {
       console.log('Crops load error:', error)
     } finally {
       setLoadingCrops(false)
     }
+  }
+
+  const handleCropPress = (crop) => {
+    if (crop.is_available === false) {
+      Alert.alert(t('comingSoon', lang), t('comingSoonMessage', lang))
+      return
+    }
+    setSelectedCrop(crop)
+    setHasManuallySelected(true)
+    setDropdownOpen(false)
   }
 
   const getRecommendation = async () => {
@@ -95,36 +127,81 @@ export default function IrrigationScreen() {
           </View>
         </View>
 
-        {/* Crop Selection */}
+        {/* Crop Selection — Dropdown */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>{t('selectCrop', lang)}</Text>
+
           {loadingCrops ? (
             <ActivityIndicator color={COLORS.primary} style={{ marginVertical: 12 }} />
           ) : (
-            crops.map(crop => (
+            <View>
+              {/* Dropdown header — shows "Crop List" until the user actually
+                  taps a crop, then switches to show the selected crop */}
               <TouchableOpacity
-                key={crop.id}
-                style={[
-                  styles.cropButton,
-                  selectedCrop?.id === crop.id && styles.cropButtonSelected
-                ]}
-                onPress={() => setSelectedCrop(crop)}
+                style={[styles.dropdownHeader, dropdownOpen && styles.dropdownHeaderOpen]}
+                onPress={() => setDropdownOpen((prev) => !prev)}
                 activeOpacity={0.7}
               >
                 <View style={styles.cropIconWrap}>
-                  <Text style={styles.cropIcon}>🧅</Text>
+                  <Text style={styles.cropIcon}>
+                    {hasManuallySelected && selectedCrop ? getCropIcon(selectedCrop.crop_name) : '🌱'}
+                  </Text>
                 </View>
-                <Text style={[
-                  styles.cropButtonText,
-                  selectedCrop?.id === crop.id && styles.cropButtonTextSelected
-                ]}>
-                  {getCropDisplayName(crop.crop_name, lang)}
+                <Text style={styles.dropdownSelectedText}>
+                  {hasManuallySelected && selectedCrop ? getCropDisplayName(selectedCrop.crop_name, lang) : 'Crop List'}
                 </Text>
-                {selectedCrop?.id === crop.id && (
-                  <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />
-                )}
+                <Ionicons
+                  name={dropdownOpen ? 'chevron-up' : 'chevron-down'}
+                  size={20}
+                  color={COLORS.textMuted}
+                />
               </TouchableOpacity>
-            ))
+
+              {/* Dropdown list — only rendered when open */}
+              {dropdownOpen && (
+                <View style={styles.dropdownList}>
+                  {crops.map((crop, index) => {
+                    const locked = crop.is_available === false
+                    const selected = selectedCrop?.id === crop.id
+                    const isLast = index === crops.length - 1
+                    return (
+                      <TouchableOpacity
+                        key={crop.id}
+                        style={[
+                          styles.dropdownItem,
+                          selected && styles.dropdownItemSelected,
+                          locked && styles.dropdownItemLocked,
+                          isLast && styles.dropdownItemLast,
+                        ]}
+                        onPress={() => handleCropPress(crop)}
+                        activeOpacity={0.7}
+                      >
+                        <View style={[styles.cropIconWrap, locked && styles.cropIconWrapLocked]}>
+                          <Text style={styles.cropIcon}>{getCropIcon(crop.crop_name)}</Text>
+                        </View>
+                        <Text style={[
+                          styles.cropButtonText,
+                          selected && styles.cropButtonTextSelected,
+                          locked && styles.cropButtonTextLocked,
+                        ]}>
+                          {getCropDisplayName(crop.crop_name, lang)}
+                        </Text>
+                        {locked ? (
+                          <View style={styles.comingSoonBadge}>
+                            <Ionicons name="lock-closed" size={11} color="#8D6E63" style={{ marginRight: 4 }} />
+                            <Text style={styles.comingSoonBadgeText}>{t('comingSoon', lang)}</Text>
+                          </View>
+                        ) : (
+                          selected && (
+                            <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />
+                          )
+                        )}
+                      </TouchableOpacity>
+                    )
+                  })}
+                </View>
+              )}
+            </View>
           )}
         </View>
 
@@ -286,20 +363,58 @@ const styles = StyleSheet.create({
     color: COLORS.textDark,
     marginBottom: SPACING.md,
   },
-  cropButton: {
+
+  // Dropdown header (collapsed state)
+  dropdownHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: SPACING.sm,
     borderRadius: RADIUS.md,
     borderWidth: 1.5,
     borderColor: COLORS.border,
-    marginBottom: SPACING.sm,
     backgroundColor: COLORS.background,
   },
-  cropButtonSelected: {
-    backgroundColor: '#E8F5E9',
+  dropdownHeaderOpen: {
     borderColor: COLORS.primary,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
+  dropdownSelectedText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '600',
+    color: COLORS.textDark,
+  },
+
+  // Dropdown list (expanded state)
+  dropdownList: {
+    borderWidth: 1.5,
+    borderTopWidth: 0,
+    borderColor: COLORS.primary,
+    borderBottomLeftRadius: RADIUS.md,
+    borderBottomRightRadius: RADIUS.md,
+    backgroundColor: COLORS.background,
+    overflow: 'hidden',
+    ...SHADOW.soft,
+  },
+  dropdownItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  dropdownItemLast: {
+    borderBottomWidth: 0,
+  },
+  dropdownItemSelected: {
+    backgroundColor: '#E8F5E9',
+  },
+  dropdownItemLocked: {
+    backgroundColor: '#FAFAFA',
+    opacity: 0.65,
+  },
+
   cropIconWrap: {
     width: 40,
     height: 40,
@@ -308,6 +423,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: SPACING.sm,
+  },
+  cropIconWrapLocked: {
+    backgroundColor: '#EEEEEE',
   },
   cropIcon: {
     fontSize: 20,
@@ -320,6 +438,22 @@ const styles = StyleSheet.create({
   cropButtonTextSelected: {
     color: COLORS.primary,
     fontWeight: '600',
+  },
+  cropButtonTextLocked: {
+    color: COLORS.textMuted,
+  },
+  comingSoonBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF3E0',
+    borderRadius: RADIUS.sm,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  comingSoonBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#8D6E63',
   },
   adviceButton: {
     backgroundColor: COLORS.primary,

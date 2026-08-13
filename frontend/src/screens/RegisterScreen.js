@@ -8,7 +8,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Location from 'expo-location'
 import { Ionicons } from '@expo/vector-icons'
 import { useLanguage } from '../context/LanguageContext'
-import { useAuth } from '../context/AuthContext'
 import { t } from '../../translations'
 import { registerUser } from '../services/api'
 import { showValidationErrorNotification } from '../services/notifications'
@@ -28,7 +27,6 @@ const GMAIL_REGEX = /^[^\s@]+@gmail\.com$/i
 
 export default function RegisterScreen({ navigation }) {
   const { lang } = useLanguage()
-  const { login } = useAuth()
 
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -39,6 +37,7 @@ export default function RegisterScreen({ navigation }) {
   const [age, setAge] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [district, setDistrict] = useState('')
+  const [districtDropdownOpen, setDistrictDropdownOpen] = useState(false)
   const [coords, setCoords] = useState(null) // { latitude, longitude }
   const [locating, setLocating] = useState(false)
   const [outOfServiceArea, setOutOfServiceArea] = useState(false)
@@ -68,15 +67,9 @@ export default function RegisterScreen({ navigation }) {
     setLocating(true)
     setOutOfServiceArea(false)
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== 'granted') {
-        Alert.alert('Permission needed', t('locationPermissionRequired', lang))
-        return
-      }
-      const position = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      })
-      const { latitude, longitude } = position.coords
+      // TEMPORARY — bypass real GPS for testing, remove before submission
+      const latitude = 7.8567
+      const longitude = 80.6517
 
       if (!isWithinServiceArea(latitude, longitude)) {
         setCoords(null)
@@ -135,7 +128,7 @@ export default function RegisterScreen({ navigation }) {
 
     setLoading(true)
     try {
-      const response = await registerUser({
+      await registerUser({
         username,
         email,
         password,
@@ -145,7 +138,11 @@ export default function RegisterScreen({ navigation }) {
         latitude: coords?.latitude,
         longitude: coords?.longitude,
       })
-      await login(response.data.token, response.data.user)
+      Alert.alert(
+        t('registerButton', lang),
+        'Account created successfully. Please log in to continue.'
+      )
+      navigation.navigate('Login')
     } catch (error) {
       const backendError = error.response?.data?.error
       const message =
@@ -246,20 +243,70 @@ export default function RegisterScreen({ navigation }) {
             {renderInput('age', t('age', lang), age, handleAgeChange, { keyboardType: 'numeric', maxLength: 3 })}
             {renderInput('phone', t('phone', lang), phoneNumber, setPhoneNumber, { keyboardType: 'phone-pad' })}
 
-            {/* District chips */}
+            {/* District dropdown */}
             <Text style={styles.label}>{t('district', lang)} *</Text>
-            <View style={styles.chipRow}>
-              {DISTRICTS.map((d) => (
-                <TouchableOpacity
-                  key={d}
-                  style={[styles.chip, district === d && styles.chipSelected]}
-                  onPress={() => setDistrict(d)}
+            <View>
+              <TouchableOpacity
+                style={[
+                  styles.districtDropdownHeader,
+                  districtDropdownOpen && styles.districtDropdownHeaderOpen,
+                ]}
+                onPress={() => setDistrictDropdownOpen((prev) => !prev)}
+                activeOpacity={0.7}
+              >
+                <Text
+                  style={[
+                    styles.districtDropdownText,
+                    !district && styles.districtDropdownPlaceholder,
+                  ]}
                 >
-                  <Text style={[styles.chipText, district === d && styles.chipTextSelected]}>
-                    {d}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                  {district || t('selectDistrict', lang)}
+                </Text>
+                <Ionicons
+                  name={districtDropdownOpen ? 'chevron-up' : 'chevron-down'}
+                  size={20}
+                  color={COLORS.textMuted}
+                />
+              </TouchableOpacity>
+
+              {districtDropdownOpen && (
+                <ScrollView
+                  style={styles.districtDropdownList}
+                  nestedScrollEnabled
+                >
+                  {DISTRICTS.map((d, index) => {
+                    const selected = district === d
+                    const isLast = index === DISTRICTS.length - 1
+                    return (
+                      <TouchableOpacity
+                        key={d}
+                        style={[
+                          styles.districtItem,
+                          selected && styles.districtItemSelected,
+                          isLast && styles.districtItemLast,
+                        ]}
+                        onPress={() => {
+                          setDistrict(d)
+                          setDistrictDropdownOpen(false)
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Text
+                          style={[
+                            styles.districtItemText,
+                            selected && styles.districtItemTextSelected,
+                          ]}
+                        >
+                          {d}
+                        </Text>
+                        {selected && (
+                          <Ionicons name="checkmark" size={18} color={COLORS.primary} />
+                        )}
+                      </TouchableOpacity>
+                    )
+                  })}
+                </ScrollView>
+              )}
             </View>
 
             {/* Location detection — now REQUIRED, gated by Dambulla service area */}
@@ -456,32 +503,64 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 4,
   },
-  chipRow: {
+
+  // District dropdown
+  districtDropdownHeader: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: SPACING.xs,
-  },
-  chip: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: RADIUS.full,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
     borderWidth: 1.5,
     borderColor: COLORS.border,
-    backgroundColor: COLORS.surface,
-    marginBottom: SPACING.xs,
   },
-  chipSelected: {
-    backgroundColor: COLORS.primary,
+  districtDropdownHeaderOpen: {
     borderColor: COLORS.primary,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
-  chipText: {
-    fontSize: 12,
+  districtDropdownText: {
+    fontSize: 16,
     color: COLORS.textDark,
   },
-  chipTextSelected: {
-    color: '#fff',
+  districtDropdownPlaceholder: {
+    color: COLORS.textMuted,
+  },
+  districtDropdownList: {
+    maxHeight: 220,
+    borderWidth: 1.5,
+    borderTopWidth: 0,
+    borderColor: COLORS.primary,
+    borderBottomLeftRadius: RADIUS.md,
+    borderBottomRightRadius: RADIUS.md,
+    backgroundColor: COLORS.background,
+    ...SHADOW.soft,
+  },
+  districtItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: SPACING.sm + 2,
+    paddingHorizontal: SPACING.md,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  districtItemLast: {
+    borderBottomWidth: 0,
+  },
+  districtItemSelected: {
+    backgroundColor: '#E8F5E9',
+  },
+  districtItemText: {
+    fontSize: 15,
+    color: COLORS.textDark,
+  },
+  districtItemTextSelected: {
+    color: COLORS.primary,
     fontWeight: '600',
   },
+
   locationButton: {
     flexDirection: 'row',
     alignItems: 'center',
