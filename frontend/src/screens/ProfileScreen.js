@@ -34,7 +34,10 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
 
         {/* Header */}
         <View style={styles.header}>
@@ -85,7 +88,6 @@ export default function ProfileScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Irrigation History — button linking to full history screen */}
         <TouchableOpacity
           style={styles.card}
           onPress={() => navigation.navigate('IrrigationHistory')}
@@ -96,44 +98,14 @@ export default function ProfileScreen({ navigation }) {
               <Text style={styles.historyIcon}>💧</Text>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.cardTitle}>Irrigation History</Text>
-              <Text style={styles.historySubtext}>View all your past recommendations</Text>
+              <Text style={styles.cardTitle}>{t('irrigationHistoryTitle', lang)}</Text>
+              <Text style={styles.historySubtext}>{t('irrigationHistorySubtitle', lang)}</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
           </View>
         </TouchableOpacity>
 
-        {/* App Info */}
-        <View style={styles.card}>
-          <View style={styles.aboutHeader}>
-            <View style={styles.aboutIconWrap}>
-              <Text style={styles.aboutIcon}>ℹ️</Text>
-            </View>
-            <Text style={styles.cardTitle}>About Smart Grow</Text>
-          </View>
-          <Text style={styles.infoText}>
-            Smart Grow is an intelligent irrigation and disease forecasting platform
-            designed for Big Onion farmers in Dambulla, Sri Lanka.
-          </Text>
-          <Text style={styles.sourcesHeading}> Research Sources:</Text>
-          <View style={styles.sourceItem}>
-            <Text style={styles.sourceBullet}>•</Text>
-            <Text style={styles.sourceText}>Sumanaratne (1999) — FCRDI, Irrigation Water Requirements</Text>
-          </View>
-          <View style={styles.sourceItem}>
-            <Text style={styles.sourceBullet}>•</Text>
-            <Text style={styles.sourceText}>DCS Big Onion Survey (2021) — Matale District Data</Text>
-          </View>
-          <View style={styles.sourceItem}>
-            <Text style={styles.sourceBullet}>•</Text>
-            <Text style={styles.sourceText}>Fernando et al. (2018) — Black Mold Disease</Text>
-          </View>
-          <View style={styles.sourceItem}>
-            <Text style={styles.sourceBullet}>•</Text>
-            <Text style={styles.sourceText}>Herath et al. (2021) — Anthracnose-Twister Disease</Text>
-          </View>
-          <Text style={styles.version}>Version 1.0.0</Text>
-        </View>
+        <View style={{ flex: 1 }} />
 
         {/* Logout Button */}
         <TouchableOpacity

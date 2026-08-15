@@ -30,17 +30,10 @@ export default function LocationTrackingScreen({ navigation }) {
     setPermissionDenied(false)
     setOutOfServiceArea(false)
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== 'granted') {
-        setPermissionDenied(true)
-        return
-      }
-      const position = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      })
+      // TEMPORARY — bypass real GPS for testing, remove before submission
       const newCoords = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
+        latitude: 7.8567,
+        longitude: 80.6517,
       }
 
       if (!isWithinServiceArea(newCoords.latitude, newCoords.longitude)) {

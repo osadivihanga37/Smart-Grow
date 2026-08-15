@@ -55,7 +55,7 @@ Smart Grow/
 
 ```bash
 cd Backend
-venv\Scripts\activate          # Windows
+venv\Scripts\activate          
 pip install -r requirements.txt
 ```
 

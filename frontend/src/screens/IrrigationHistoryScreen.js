@@ -5,18 +5,34 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
+import { useLanguage } from '../context/LanguageContext'
+import { t } from '../../translations'
 import { getIrrigationHistory } from '../services/api'
 import { COLORS, RADIUS, SPACING, SHADOW, TYPOGRAPHY } from '../theme'
 
 export default function IrrigationHistoryScreen({ navigation }) {
+  const { lang } = useLanguage()
   const [history, setHistory] = useState([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
 
+  const dedupeByDay = (records) => {
+    const seenDays = new Set()
+    const result = []
+    for (const record of records) {
+      const dayKey = new Date(record.created_at).toDateString()
+      if (!seenDays.has(dayKey)) {
+        seenDays.add(dayKey)
+        result.push(record)
+      }
+    }
+    return result
+  }
+
   const fetchHistory = async () => {
     try {
       const response = await getIrrigationHistory()
-      setHistory(response.data || [])
+      setHistory(dedupeByDay(response.data || []))
     } catch (err) {
       console.log('Irrigation history load error:', err)
     } finally {
@@ -54,7 +70,7 @@ export default function IrrigationHistoryScreen({ navigation }) {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={26} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Irrigation History</Text>
+        <Text style={styles.headerTitle}>{t('irrigationHistoryTitle', lang)}</Text>
         <View style={{ width: 26 }} />
       </View>
 
@@ -72,7 +88,7 @@ export default function IrrigationHistoryScreen({ navigation }) {
               <Text style={styles.emptyIcon}>💧</Text>
             </View>
             <Text style={styles.emptyText}>
-              No irrigation recommendations yet. Check the Irrigation tab to get your first one.
+              {t('noHistoryYet', lang)}
             </Text>
           </View>
         ) : (
@@ -102,33 +118,33 @@ export default function IrrigationHistoryScreen({ navigation }) {
                   ]}
                 >
                   <Text style={styles.recordBadgeText}>
-                    {record.should_irrigate ? 'Irrigate' : 'Skip'}
+                    {record.should_irrigate ? t('irrigate', lang) : t('skip', lang)}
                   </Text>
                 </View>
               </View>
 
               <View style={styles.recordDetailsRow}>
                 <View style={styles.recordDetailItem}>
-                  <Text style={styles.recordDetailLabel}>Temp</Text>
+                  <Text style={styles.recordDetailLabel}>{t('temp', lang)}</Text>
                   <Text style={styles.recordDetailValue}>{record.temperature_c}°C</Text>
                 </View>
                 <View style={styles.recordDetailItem}>
-                  <Text style={styles.recordDetailLabel}>Humidity</Text>
+                  <Text style={styles.recordDetailLabel}>{t('humidity', lang)}</Text>
                   <Text style={styles.recordDetailValue}>{record.humidity_percent}%</Text>
                 </View>
                 <View style={styles.recordDetailItem}>
-                  <Text style={styles.recordDetailLabel}>Rainfall</Text>
+                  <Text style={styles.recordDetailLabel}>{t('rainfall', lang)}</Text>
                   <Text style={styles.recordDetailValue}>{record.rainfall_mm}mm</Text>
                 </View>
                 <View style={styles.recordDetailItem}>
-                  <Text style={styles.recordDetailLabel}>Deficit</Text>
+                  <Text style={styles.recordDetailLabel}>{t('deficit', lang)}</Text>
                   <Text style={styles.recordDetailValue}>{record.moisture_deficit_mm}mm</Text>
                 </View>
               </View>
 
               {record.should_irrigate && record.recommended_volume_liters ? (
                 <Text style={styles.recordVolume}>
-                  Recommended: {Math.round(record.recommended_volume_liters).toLocaleString()} L
+                  {t('recommended', lang)}: {Math.round(record.recommended_volume_liters).toLocaleString()} {t('liters', lang)}
                 </Text>
               ) : null}
 

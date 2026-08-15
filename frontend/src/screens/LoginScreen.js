@@ -126,7 +126,7 @@ export default function LoginScreen({ navigation }) {
               activeOpacity={0.8}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color="#ffffff" />
               ) : (
                 <Text style={styles.loginButtonText}>
                   {t('loginButton', lang)}
@@ -145,7 +145,7 @@ export default function LoginScreen({ navigation }) {
               onPress={handleGoogleLogin}
               activeOpacity={0.8}
             >
-              <Ionicons name="logo-google" size={20} color="#EA4335" />
+              <Ionicons name="logo-google" size={20} color="#040303" />
               <Text style={styles.googleButtonText}>{t('continueWithGoogle', lang)}</Text>
             </TouchableOpacity>
 
@@ -168,7 +168,7 @@ export default function LoginScreen({ navigation }) {
             </TouchableOpacity>
 
             <View style={styles.footer}>
-              <Text style={styles.footerText}>🧅 Smart Grow for Big Onion Farmers</Text>
+              <Text style={styles.footerText}>Smart Grow for Farmers</Text>
               <Text style={styles.footerVersion}>v1.0</Text>
             </View>
 

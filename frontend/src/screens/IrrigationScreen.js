@@ -83,29 +83,33 @@ export default function IrrigationScreen() {
     setDropdownOpen(false)
   }
 
-  const getRecommendation = async () => {
-    if (!selectedCrop) {
-      Alert.alert('Error', 'Please select a crop first')
-      return
-    }
-    setLoading(true)
-    setRecommendation(null)
-    try {
-      const response = await getIrrigationRecommendation(
-        selectedCrop.id, LATITUDE, LONGITUDE, lang
-      )
-      setRecommendation(response.data)
-
-      // Refresh the irrigation reminder to match this new recommendation —
-      // cancel any previously scheduled one first so they don't stack up.
-      await cancelAllScheduledNotifications()
-      await scheduleIrrigationReminder(1)
-    } catch (error) {
-      Alert.alert('Error', t('error', lang))
-    } finally {
-      setLoading(false)
-    }
+const getRecommendation = async () => {
+  if (!selectedCrop) {
+    Alert.alert('Error', 'Please select a crop first')
+    return
   }
+  setLoading(true)
+  setRecommendation(null)
+  try {
+    const response = await getIrrigationRecommendation(
+      selectedCrop.id, LATITUDE, LONGITUDE, lang
+    )
+    setRecommendation(response.data)
+  } catch (error) {
+    Alert.alert('Error', t('error', lang))
+    setLoading(false)
+    return
+  }
+
+  try {
+    await cancelAllScheduledNotifications()
+    await scheduleIrrigationReminder(1)
+  } catch (notifError) {
+    console.log('Notification scheduling skipped:', notifError)
+  }
+
+  setLoading(false)
+}
 
   return (
     <SafeAreaView style={styles.container}>

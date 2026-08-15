@@ -79,7 +79,7 @@ export default function WelcomeScreen({ navigation }) {
 
     const timer = setTimeout(() => {
       navigation.replace('About')
-    }, 2000)
+    }, 6000)
     return () => clearTimeout(timer)
   }, [navigation])
 

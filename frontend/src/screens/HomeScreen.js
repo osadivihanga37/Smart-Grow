@@ -115,7 +115,7 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.weatherHeader}>
             <Ionicons name="location" size={16} color={COLORS.primary} />
             <Text style={styles.weatherTitle}>
-              Dambulla — {t('todayWeather', lang)}
+              {t('dambulla', lang)} — {t('todayWeather', lang)}
             </Text>
           </View>
           {loading ? (
@@ -162,7 +162,7 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* Quick Actions */}
-        <Text style={styles.sectionTitle}>Quick Actions</Text>
+        <Text style={styles.sectionTitle}>{t('quickActions', lang)}</Text>
 
         <TouchableOpacity
           style={styles.actionCard}
@@ -174,7 +174,7 @@ export default function HomeScreen({ navigation }) {
           </View>
           <View style={styles.actionTextWrap}>
             <Text style={styles.actionTitle}>{t('irrigationTitle', lang)}</Text>
-            <Text style={styles.actionSubtitle}>Get water recommendation for your crop</Text>
+            <Text style={styles.actionSubtitle}>{t('irrigationSubtitle', lang)}</Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
         </TouchableOpacity>
@@ -189,7 +189,7 @@ export default function HomeScreen({ navigation }) {
           </View>
           <View style={styles.actionTextWrap}>
             <Text style={styles.actionTitle}>{t('diseaseTitle', lang)}</Text>
-            <Text style={styles.actionSubtitle}>Check disease risk for today</Text>
+            <Text style={styles.actionSubtitle}>{t('diseaseSubtitle', lang)}</Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
         </TouchableOpacity>
@@ -204,18 +204,18 @@ export default function HomeScreen({ navigation }) {
           </View>
           <View style={styles.actionTextWrap}>
             <Text style={styles.actionTitle}>{t('crops', lang)}</Text>
-            <Text style={styles.actionSubtitle}>Big Onion advisory data</Text>
+            <Text style={styles.actionSubtitle}>{t('cropsSubtitle', lang)}</Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
         </TouchableOpacity>
 
         {/* Info Banner */}
-        <View style={styles.infoCard}>
-          <Text style={styles.infoTitle}>🧅 Big Onion Season</Text>
-          <Text style={styles.infoText}>Harvest months: September — October</Text>
-          <Text style={styles.infoText}>Average yield: 20.4 MT/hectare (Dambulla)</Text>
-          <Text style={styles.infoSource}>Source: DCS Big Onion Survey 2021</Text>
-        </View>
+      <View style={styles.infoCard}>
+        <Text style={styles.infoTitle}>🧅 {t('bigOnionSeason', lang)}</Text>
+        <Text style={styles.infoText}>{t('harvestMonths', lang)}</Text>
+        <Text style={styles.infoText}>{t('averageYieldDambulla', lang)}</Text>
+        <Text style={styles.infoSource}>{t('sourceDcs', lang)}</Text>
+      </View>
 
       </ScrollView>
 
